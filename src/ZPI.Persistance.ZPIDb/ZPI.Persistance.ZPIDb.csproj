@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TargetType>library</TargetType>
+  </PropertyGroup>
+
+ <ItemGroup>   <!-- Packages references -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.9" />
+    <PackageReference Include="NodaTime" Version="3.1.2" />
+    <PackageReference Include="Npgsql" Version="6.0.6" />
+    <PackageReference Include="Npgsql.NodaTime" Version="6.0.6" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.6" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NodaTime" Version="6.0.6" />
+  </ItemGroup>
+
+  <ItemGroup>    <!-- Modules references -->
+    <ProjectReference Include="../ZPI.Core/ZPI.Core.csproj" />
+    <ProjectReference Include="../ZPI.Utils/ZPI.Utils.csproj" />
+  </ItemGroup>
+</Project>
