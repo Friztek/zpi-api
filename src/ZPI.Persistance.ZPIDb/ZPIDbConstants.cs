@@ -1,4 +1,4 @@
-namespace ELT.Services.Audit.Persistance.AuditDb;
+namespace ZPI.Persistance.ZPIDb;
 
 public static class ZPIDbConstants
 {

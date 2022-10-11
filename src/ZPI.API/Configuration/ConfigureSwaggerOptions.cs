@@ -5,7 +5,7 @@ using Microsoft.OpenApi.Models;
 using NodaTime;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace ELT.Services.Audit.API.Configuration;
+namespace ZPI.API.Configuration;
 
 public sealed class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
 {

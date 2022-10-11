@@ -1,8 +1,8 @@
-using ELT.Services.Audit.Persistance.AuditDb;
 using Microsoft.EntityFrameworkCore;
 using ZPI.Core.Abstraction.Repositories;
 using ZPI.Core.Domain;
 using ZPI.Persistance.Mappings;
+using ZPI.Persistance.ZPIDb;
 
 namespace ZPI.Persistance.Repositories;
 

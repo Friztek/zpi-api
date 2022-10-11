@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using ZPI.Persistance.Entities;
 
-namespace ELT.Services.Audit.Persistance.AuditDb;
+namespace ZPI.Persistance.ZPIDb;
 
 public sealed class ZPIDbContext : DbContext
 {

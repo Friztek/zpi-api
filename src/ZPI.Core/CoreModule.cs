@@ -1,7 +1,7 @@
 global using ILogger = Serilog.ILogger;
 using ZPI.Core.UseCases;
 
-namespace ELT.Services.Audit;
+namespace ZPI.Core;
 
 public static class CoreModule
 {

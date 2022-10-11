@@ -1,6 +1,4 @@
 global using ILogger = Serilog.ILogger;
-using ELT.Common.AspNetCore.Utils;
-using ELT.Services.Audit.API.Configuration;
 using Mapster;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Options;
@@ -8,9 +6,10 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using ZPI.API.Configuration;
 using ZPI.API.Endpoints.Assets.GetAll;
 using ZPI.API.Mappings;
+using ZPI.AspNetCore.Utils;
 using ZPI.IAPI.Mappings;
 
-namespace ELT.Services.Audit;
+namespace ZPI.API;
 
 public static class ApiModule
 {

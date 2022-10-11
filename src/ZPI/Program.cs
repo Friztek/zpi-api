@@ -1,5 +1,3 @@
-using ELT.Common.AspNetCore.Utils;
-using ELT.Services.Audit;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -7,7 +5,11 @@ using Newtonsoft.Json.Serialization;
 using NodaTime;
 using NodaTime.Serialization.JsonNet;
 using Serilog;
+using ZPI.API;
 using ZPI.API.Configuration;
+using ZPI.AspNetCore.Utils;
+using ZPI.Core;
+using ZPI.Persistance;
 
 #if DEBUG
 var startupConfig = new ConfigurationBuilder().Apply(b => StartupConfigurationHelper.LoadStartupConfiguration(b, true)).Build();

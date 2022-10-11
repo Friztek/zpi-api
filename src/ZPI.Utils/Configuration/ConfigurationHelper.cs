@@ -1,4 +1,4 @@
-namespace ELT.Common.AspNetCore.Utils;
+namespace ZPI.AspNetCore.Utils;
 public static class ConfigurationHelper
 {
     public static T? GetSection<T>(this IConfiguration configuration, string sectionName) where T : class

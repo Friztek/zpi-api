@@ -1,6 +1,4 @@
 global using ILogger = Serilog.ILogger;
-using ELT.Common.AspNetCore.Utils;
-using ELT.Services.Audit.Persistance.AuditDb;
 using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Rewrite;
@@ -8,12 +6,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
 using ZPI.API.Persistance;
+using ZPI.AspNetCore.Utils;
 using ZPI.Core.Abstraction.Repositories;
 using ZPI.IPersistance.Mappings;
 using ZPI.Persistance.Mappings;
 using ZPI.Persistance.Repositories;
+using ZPI.Persistance.ZPIDb;
 
-namespace ELT.Services.Audit;
+namespace ZPI.Persistance;
 
 public static class PersistanceModule
 {

@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace ELT.Common.AspNetCore.Utils;
+namespace ZPI.AspNetCore.Utils;
 
 internal static class ServiceCollectionExtensions
 {
