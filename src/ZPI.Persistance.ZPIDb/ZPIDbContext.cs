@@ -50,7 +50,7 @@ public sealed class ZPIDbContext : DbContext
 
         modelBuilder.Entity<AssetValueEntity>(entity =>
         {
-            entity.HasKey(e => new { e.AssetIdentifier });
+            entity.HasKey(e => new { e.Identifier });
         });
 
         modelBuilder.Entity<TransactionEntity>(entity =>

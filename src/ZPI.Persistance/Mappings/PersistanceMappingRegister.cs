@@ -31,7 +31,9 @@ public sealed class PersistanceMappingRegister : IRegister
             .Map(d => d.AssetIdentifier, s => s.AssetName)
             .Map(d => d.TimeStamp, s => s.TimeStamp)
             .Map(d => d.Value, s => s.Value)
-            .Ignore(d => d.Asset);
+            .Ignore(d => d.Asset)
+            .Ignore(d => d.Identifier);
+
 
         config.NewConfig<Core.UseCases.PatchAssetValueUseCase.Input, AssetValueEntity>()
             .Inherits<IAssetsRepository.PatchAssetValue, AssetValueEntity>();
