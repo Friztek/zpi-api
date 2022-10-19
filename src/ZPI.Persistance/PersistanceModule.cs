@@ -74,6 +74,7 @@ public static class PersistanceModule
         {
             builder.UseNpgsql(AuditDbConfig.ConnectionString, config =>
             {
+                AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
                 config.SetPostgresVersion(AuditDbConfig.PostgresApiVersion);
                 config.MigrationsHistoryTable(ZPIDbConstants.MigrationsTableName, ZPIDbConstants.MigrationsTableSchema);
                 config.UseNodaTime();

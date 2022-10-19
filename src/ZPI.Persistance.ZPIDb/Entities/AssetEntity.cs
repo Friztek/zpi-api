@@ -2,7 +2,11 @@ namespace ZPI.Persistance.Entities;
 
 public class AssetEntity
 {
-    public string Name { get; set; }
+    public string Identifier { get; set; }
     public string FriendlyName { get; set; }
     public string Category { get; set; }
+    public virtual ICollection<AssetValueEntity> Values { get; set; }
+    public virtual ICollection<AlertEntity> Alerts { get; set; }
+    public virtual ICollection<TransactionEntity> Transactions { get; set; }
+    public virtual ICollection<UserAssetEntity> UserAssets { get; set; }
 }

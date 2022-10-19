@@ -14,5 +14,6 @@ public static class CoreModule
     private static void AddUseCases(this IServiceCollection services, ILogger logger)
     {
         services.AddScoped<GetAllAssetsUseCase>();
+        services.AddScoped<PatchAssetValueUseCase>();
     }
 }

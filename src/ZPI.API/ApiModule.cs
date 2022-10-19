@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using ZPI.API.Configuration;
 using ZPI.API.Endpoints.Assets.GetAll;
+using ZPI.API.Endpoints.Assets.PatchValue;
 using ZPI.API.Mappings;
 using ZPI.AspNetCore.Utils;
 using ZPI.IAPI.Mappings;
@@ -61,6 +62,7 @@ public static class ApiModule
     private static void RegisterPresenters(this IServiceCollection services, ILogger logger)
     {
         services.AddScoped<GetAllAssetsPresenter>();
+        services.AddScoped<PatchAssetValuePresenter>();
     }
 
 

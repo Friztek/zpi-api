@@ -7,7 +7,7 @@ public static class ActionResultFactory
 {
     public static IActionResult Ok200() => new OkResult();
     public static IActionResult Ok200(object result) => new OkObjectResult(result);
-
+    public static IActionResult NoContent() => new NoContentResult();
     public static IActionResult Created201() => new StatusCodeResult(201);
     public static IActionResult Created201(object result) => new ObjectResult(result) { StatusCode = 201 };
     public static IActionResult BadRequest400() => new BadRequestResult();
