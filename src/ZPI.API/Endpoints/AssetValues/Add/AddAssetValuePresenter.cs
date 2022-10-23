@@ -5,11 +5,11 @@ using ZPI.API.Utils;
 using ZPI.Core.Domain;
 using ZPI.Core.UseCases;
 
-namespace ZPI.API.Endpoints.Assets.PatchValue;
-public sealed class PatchAssetValuePresenter : ActionResultPresenterBase, PatchAssetValueUseCase.IOutput
+namespace ZPI.API.Endpoints.AssetValues.Add;
+public sealed class AddAssetValuePresenter : ActionResultPresenterBase, AddAssetValueUseCase.IOutput
 {
     private readonly IAPIMapper mapper;
-    public PatchAssetValuePresenter(ILogger logger, IAPIMapper mapper) : base(logger)
+    public AddAssetValuePresenter(ILogger logger, IAPIMapper mapper) : base(logger)
     {
         this.mapper = mapper;
     }

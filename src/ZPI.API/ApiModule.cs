@@ -5,7 +5,10 @@ using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using ZPI.API.Configuration;
 using ZPI.API.Endpoints.Assets.GetAll;
-using ZPI.API.Endpoints.Assets.PatchValue;
+using ZPI.API.Endpoints.AssetValues.Add;
+using ZPI.API.Endpoints.AssetValues.Search;
+using ZPI.API.Endpoints.User.Preferences.Get;
+using ZPI.API.Endpoints.User.Preferences.Update;
 using ZPI.API.Mappings;
 using ZPI.AspNetCore.Utils;
 using ZPI.IAPI.Mappings;
@@ -62,7 +65,10 @@ public static class ApiModule
     private static void RegisterPresenters(this IServiceCollection services, ILogger logger)
     {
         services.AddScoped<GetAllAssetsPresenter>();
-        services.AddScoped<PatchAssetValuePresenter>();
+        services.AddScoped<AddAssetValuePresenter>();
+        services.AddScoped<GetUserPreferencesPresenter>();
+        services.AddScoped<UpdateUserPreferencesPresenter>();
+        services.AddScoped<SearchAssetValuesPresenter>();
     }
 
 

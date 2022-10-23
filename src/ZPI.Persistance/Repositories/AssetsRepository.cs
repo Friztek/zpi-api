@@ -24,20 +24,4 @@ public class AssetsRepository : IAssetsRepository
 
         return this.mapper.Map<IEnumerable<AssetModel>>(assets);
     }
-
-    public async Task<AssetValueModel> UpdateAsync(IAssetsRepository.PatchAssetValue updateModel)
-    {
-        var asset = await context.Assets.FirstOrDefaultAsync(asset => asset.Identifier == updateModel.AssetName);
-
-        if (asset is null)
-        {
-            throw new AssetNotFoundException(AssetNotFoundException.GenerateBaseMessage(updateModel.AssetName));
-        }
-
-        var entity = this.mapper.Map<AssetValueEntity>(updateModel);
-        var entry = context.AssetValues.Add(entity);
-        await context.SaveChangesAsync();
-        
-        return mapper.Map<AssetValueModel>(entry.Entity);
-    }
 }

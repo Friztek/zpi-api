@@ -5,11 +5,11 @@ using ZPI.Core.Domain;
 
 namespace ZPI.Core.UseCases;
 
-public sealed class PatchAssetValueUseCase : IUseCase<PatchAssetValueUseCase.Input, PatchAssetValueUseCase.IOutput>
+public sealed class AddAssetValueUseCase : IUseCase<AddAssetValueUseCase.Input, AddAssetValueUseCase.IOutput>
 {
-    private readonly IAssetsRepository repository;
+    private readonly IAssetValuesRepository repository;
 
-    public PatchAssetValueUseCase(IAssetsRepository repository)
+    public AddAssetValueUseCase(IAssetValuesRepository repository)
     {
         this.repository = repository;
     }
@@ -31,7 +31,7 @@ public sealed class PatchAssetValueUseCase : IUseCase<PatchAssetValueUseCase.Inp
         string AssetName,
         double Value,
         OffsetDateTime TimeStamp
-    ) : IAssetsRepository.PatchAssetValue(
+    ) : IAssetValuesRepository.AddAssetValue(
         AssetName,
         Value,
         TimeStamp

@@ -1,4 +1,5 @@
 using System.Net.Mime;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ZPI.API.Abstraction;
 using ZPI.API.DTos;
@@ -8,9 +9,9 @@ namespace ZPI.API.Endpoints.Assets.GetAll;
 
 [ApiController]
 [Route("api/assets")]
-public sealed class AuditsController : UseCaseController<GetAllAssetsUseCase, GetAllAssetsPresenter>
+public sealed class AssetsController : UseCaseController<GetAllAssetsUseCase, GetAllAssetsPresenter>
 {
-    public AuditsController(ILogger logger, GetAllAssetsUseCase useCase, GetAllAssetsPresenter presenter)
+    public AssetsController(ILogger logger, GetAllAssetsUseCase useCase, GetAllAssetsPresenter presenter)
         : base(logger, useCase, presenter)
     { }
 

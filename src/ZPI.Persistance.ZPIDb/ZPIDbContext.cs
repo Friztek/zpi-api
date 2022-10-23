@@ -24,6 +24,7 @@ public sealed class ZPIDbContext : DbContext
     public DbSet<AssetValueEntity> AssetValues { get; init; }
     public DbSet<TransactionEntity> Transactions { get; init; }
     public DbSet<UserAssetEntity> UserAssets { get; init; }
+    public DbSet<UserPreferencesEntity> UserPreferences { get; init; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -51,6 +52,11 @@ public sealed class ZPIDbContext : DbContext
         modelBuilder.Entity<AssetValueEntity>(entity =>
         {
             entity.HasKey(e => new { e.Identifier });
+        });
+
+        modelBuilder.Entity<UserPreferencesEntity>(entity =>
+        {
+            entity.HasKey(e => e.UserId);
         });
 
         modelBuilder.Entity<TransactionEntity>(entity =>

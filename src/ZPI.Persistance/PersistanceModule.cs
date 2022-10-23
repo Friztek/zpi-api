@@ -56,6 +56,8 @@ public static class PersistanceModule
     private static void RegisterRepositories(this IServiceCollection services, ILogger logger)
     {
         services.AddScoped<IAssetsRepository, AssetsRepository>();
+        services.AddScoped<IUserPreferencesRepository, UserPreferencesRepository>();
+        services.AddScoped<IAssetValuesRepository, AssetValuesRepository>();
     }
 
     private static void RegisterDatabases(this IServiceCollection services, IConfiguration configuration, ILogger logger)

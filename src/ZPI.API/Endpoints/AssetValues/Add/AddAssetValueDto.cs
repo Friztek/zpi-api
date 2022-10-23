@@ -3,7 +3,7 @@ using NodaTime;
 
 namespace ZPI.API.DTos;
 
-public sealed record PatchAssetValueDto(
+public sealed record AddAssetValueDto(
     [property: JsonProperty(Required = Required.Always)]
     double Value,
 

@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -44,6 +46,16 @@ WebApplication BuildWebApplication()
 
     builder.Logging.ClearProviders();
     builder.Host.UseSerilog(Log.Logger, true);
+
+    builder.Services.AddAuthorization(o =>
+  {
+      o.DefaultPolicy = new AuthorizationPolicyBuilder()
+          .RequireAuthenticatedUser()
+          .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+          .Build();
+  })
+      .AddAuthentication(options => builder.Configuration.Bind(Constants.ConfigSections.Authentication.DefaultConfig, options))
+      .AddJwtBearer(options => builder.Configuration.Bind(Constants.ConfigSections.Authentication.JwtBearer, options));
 
     builder.Services.AddJsonSerializerConfigurator(jsonSerializerConfigurator, true);
     builder.Services.AddCors(options =>
