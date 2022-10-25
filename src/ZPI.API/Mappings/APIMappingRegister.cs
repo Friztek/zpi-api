@@ -1,5 +1,6 @@
 using Mapster;
 using ZPI.API.DTos;
+using ZPI.Core.Abstraction.Repositories;
 using ZPI.Core.Domain;
 
 namespace ZPI.IAPI.Mappings;
@@ -18,6 +19,21 @@ public sealed class APIMappingRegister : IRegister
             .Map(d => d.AlertsOnEmail, s => s.AlertsOnEmail)
             .Map(d => d.PreferenceCurrency, s => s.PreferenceCurrency)
             .Map(d => d.WeeklyReports, s => s.WeeklyReports)
+            .ShallowCopyForSameType(false);
+
+        config.NewConfig<UserAssetModel, UserAssetDto>()
+            .Map(d => d.Asset, s => s.Asset)
+            .Map(d => d.OriginValue, s => s.OriginValue)
+            .Map(d => d.UserCurrencyValue, s => s.UserCurrencyValue)
+            .ShallowCopyForSameType(false);
+
+        config.NewConfig<Core.Domain.TransactionType, API.DTos.TransactionType>()
+            .TwoWays();
+
+        config.NewConfig<PatchUserAssetsDto, IUserAssetsRepository.UserAssetTransaction>()
+            .Map(d => d.AssetName, s => s.AssetName)
+            .Map(d => d.Type, s => s.Type)
+            .Map(d => d.Value, s => s.Value)
             .ShallowCopyForSameType(false);
 
         config.NewConfig<AssetValueModel, AssetValueDto>()

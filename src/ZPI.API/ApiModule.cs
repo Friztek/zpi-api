@@ -7,6 +7,9 @@ using ZPI.API.Configuration;
 using ZPI.API.Endpoints.Assets.GetAll;
 using ZPI.API.Endpoints.AssetValues.Add;
 using ZPI.API.Endpoints.AssetValues.Search;
+using ZPI.API.Endpoints.User.Assets.Delete;
+using ZPI.API.Endpoints.User.Assets.Get;
+using ZPI.API.Endpoints.User.Assets.Patch;
 using ZPI.API.Endpoints.User.Preferences.Get;
 using ZPI.API.Endpoints.User.Preferences.Update;
 using ZPI.API.Mappings;
@@ -69,6 +72,9 @@ public static class ApiModule
         services.AddScoped<GetUserPreferencesPresenter>();
         services.AddScoped<UpdateUserPreferencesPresenter>();
         services.AddScoped<SearchAssetValuesPresenter>();
+        services.AddScoped<GetAllUserAssetsPresenter>();
+        services.AddScoped<DeleteUserAssetsPresenter>();
+        services.AddScoped<PatchUserAssetsPresenter>();
     }
 
 

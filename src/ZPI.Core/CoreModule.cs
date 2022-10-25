@@ -18,5 +18,8 @@ public static class CoreModule
         services.AddScoped<GetUserPreferencesUseCase>();
         services.AddScoped<UpdateUserPreferencesUseCase>();
         services.AddScoped<SearchAssetValuesUseCase>();
+        services.AddScoped<GetAllUserAssetsUseCase>();
+        services.AddScoped<PatchUserAssetsUseCase>();
+        services.AddScoped<DeleteUserAssetUseCase>();
     }
 }
