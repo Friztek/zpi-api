@@ -28,9 +28,8 @@ public class AssetValuesRepository : IAssetValuesRepository
             throw new AssetNotFoundException(AssetNotFoundException.GenerateBaseMessage(searchModel.AssetName));
         }
 
-        var query = context.AssetValues.Where(e => e.AssetIdentifier == searchModel.AssetName).AsQueryable();
+        var query = context.AssetValuesAtDay.Where(e => e.AssetIdentifier == searchModel.AssetName).AsQueryable();
 
-        // TODO return last record at given date
         if (searchModel.From.HasValue)
         {
             query = query.Where(e => OffsetDateTime.Comparer.Instant.Compare(e.TimeStamp, searchModel.From.Value.At(LocalTime.Midnight)) > 0);
@@ -38,7 +37,8 @@ public class AssetValuesRepository : IAssetValuesRepository
 
         if (searchModel.To.HasValue)
         {
-            query = query.Where(e => OffsetDateTime.Comparer.Instant.Compare(e.TimeStamp, searchModel.To.Value.At(LocalTime.Midnight)) < 0);
+            var dateUpper = new OffsetDate(searchModel.To.Value.Date.PlusDays(1), searchModel.To.Value.Offset);
+            query = query.Where(e => OffsetDateTime.Comparer.Instant.Compare(e.TimeStamp, dateUpper.At(LocalTime.Midnight)) < 0);
         }
 
         var values = await query.ToListAsync();

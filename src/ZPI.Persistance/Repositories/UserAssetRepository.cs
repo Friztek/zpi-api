@@ -47,12 +47,22 @@ public class UserAssetsRepository : IUserAssetsRepository
             throw new UserNotFoundException(UserNotFoundException.GenerateBaseMessage(searchModel.UserId));
         }
 
+        var preferenceCurrencyAsset = await this.context.AssetValues
+            .OrderBy(a => a.TimeStamp)
+            .FirstOrDefaultAsync(a => a.AssetIdentifier == user.PreferenceCurrency);
+
+        if (preferenceCurrencyAsset is null)
+        {
+            // TODO
+            throw new Exception();
+        }
+
         var userAssets = await this.context.UserAssets
                     .Include(ua => ua.Asset)
                     .Where(ua => ua.UserId == searchModel.UserId)
                     .ToListAsync();
 
-        return userAssets.Select(userAsset => this.mapper.Map<UserAssetModel>((userAsset, 2)));
+        return userAssets.Select(userAsset => this.mapper.Map<UserAssetModel>((userAsset, userAsset.Value * preferenceCurrencyAsset.Value)));
 
     }
 
