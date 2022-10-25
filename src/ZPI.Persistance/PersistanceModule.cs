@@ -1,4 +1,5 @@
 global using ILogger = Serilog.ILogger;
+using Auth0.ManagementApi;
 using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Rewrite;
@@ -23,6 +24,12 @@ public static class PersistanceModule
         services.RegisterDatabases(configuration, logger);
         services.RegisterMappings(logger);
         services.RegisterRepositories(logger);
+        services.RegisterAuth0Client();
+    }
+
+    public static void RegisterAuth0Client(this IServiceCollection services)
+    {
+        services.AddSingleton<IManagementConnection, HttpClientManagementConnection>();
     }
 
     public static void UsePersistanceModule(this IApplicationBuilder app)

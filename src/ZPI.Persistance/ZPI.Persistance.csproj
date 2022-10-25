@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>    <!-- Packages references -->
+    <PackageReference Include="Auth0.ManagementApi" Version="7.17.4" />
     <PackageReference Include="Mapster" Version="7.3.0" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="6.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.9" />

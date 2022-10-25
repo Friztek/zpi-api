@@ -1,3 +1,4 @@
+using Auth0.ManagementApi;
 using Microsoft.EntityFrameworkCore;
 using ZPI.Core.Abstraction.Repositories;
 using ZPI.Core.Domain;
@@ -8,41 +9,31 @@ using ZPI.Persistance.ZPIDb;
 
 namespace ZPI.Persistance.Repositories;
 
-public class UserPreferencesRepository : IUserPreferencesRepository
+public class UsersRepository : IUsersRepository
 {
     private readonly ZPIDbContext context;
     private readonly IPersistanceMapper mapper;
-    public UserPreferencesRepository(ZPIDbContext context, IPersistanceMapper mapper)
+    private readonly ManagementApiClient managementApiClient;
+
+    public UsersRepository(ZPIDbContext context, IPersistanceMapper mapper, IManagementConnection managementConnection)
     {
         this.context = context;
         this.mapper = mapper;
+        this.managementApiClient = new ManagementApiClient("token", new Uri("http://base-path"), managementConnection);
     }
 
-    public async Task<UserPreferencesModel> GetAsync(IUserPreferencesRepository.GetUserPreferences getModel)
+    public Task<UserModel> GetAsync(string getModel)
     {
-        var userPreferences = await context.UserPreferences.FirstOrDefaultAsync(userPreference => userPreference.UserId == getModel.UserId);
-
-        if (userPreferences is null)
-        {
-            throw new UserNotFoundException(UserNotFoundException.GenerateBaseMessage(getModel.UserId));
-        }
-
-        return mapper.Map<UserPreferencesModel>(userPreferences);
+        throw new NotImplementedException();
     }
 
-    public async Task<UserPreferencesModel> UpdateAsync(IUserPreferencesRepository.UpdateUserPreferences updateModel)
+    public Task<UserModel> UpdateAsync(IUsersRepository.UpdateEmail updateModel)
     {
-        var userPreferences = await context.UserPreferences.FirstOrDefaultAsync(userPreference => userPreference.UserId == updateModel.UserId);
+        throw new NotImplementedException();
+    }
 
-        if (userPreferences is null)
-        {
-            throw new UserNotFoundException(UserNotFoundException.GenerateBaseMessage(updateModel.UserId));
-        }
-
-        mapper.Map(updateModel, userPreferences);
-
-        await this.context.SaveChangesAsync();
-
-        return mapper.Map<UserPreferencesModel>(userPreferences);
+    public Task<UserModel> UpdateAsync(IUsersRepository.UpdateName updateModel)
+    {
+        throw new NotImplementedException();
     }
 }
