@@ -6,6 +6,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using ZPI.API.Configuration;
 using ZPI.API.Endpoints.Assets.GetAll;
 using ZPI.API.Endpoints.AssetValues.Add;
+using ZPI.API.Endpoints.AssetValues.Get;
 using ZPI.API.Endpoints.AssetValues.Search;
 using ZPI.API.Endpoints.User.Assets.Delete;
 using ZPI.API.Endpoints.User.Assets.Get;
@@ -72,6 +73,7 @@ public static class ApiModule
         services.AddScoped<GetUserPreferencesPresenter>();
         services.AddScoped<UpdateUserPreferencesPresenter>();
         services.AddScoped<SearchAssetValuesPresenter>();
+        services.AddScoped<GetAssetValuesPresenter>();
         services.AddScoped<GetAllUserAssetsPresenter>();
         services.AddScoped<DeleteUserAssetsPresenter>();
         services.AddScoped<PatchUserAssetsPresenter>();

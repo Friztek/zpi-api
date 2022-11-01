@@ -45,6 +45,12 @@ public class AssetValuesRepository : IAssetValuesRepository
         return mapper.Map<IEnumerable<AssetValueModel>>(values);
     }
 
+    public async Task<IEnumerable<AssetValueModel>> SearchAsync(IAssetValuesRepository.GetAssetValues searchModel)
+    {
+        var values = await context.AssetValuesAtm.ToListAsync();
+        return mapper.Map<IEnumerable<AssetValueModel>>(values);
+    }
+
     public async Task<AssetValueModel> UpdateAsync(IAssetValuesRepository.AddAssetValue updateModel)
     {
         var asset = await context.Assets.FirstOrDefaultAsync(asset => asset.Identifier == updateModel.AssetName);

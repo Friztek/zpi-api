@@ -27,6 +27,8 @@ public sealed class ZPIDbContext : DbContext
     public DbSet<UserPreferencesEntity> UserPreferences { get; init; }
     public DbSet<AssetValueAtDay> AssetValuesAtDay { get; init; }
 
+    public DbSet<AssetValueAtm> AssetValuesAtm { get; init; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema(ZPIDbConstants.DefaultSchema);
@@ -72,6 +74,12 @@ public sealed class ZPIDbContext : DbContext
         modelBuilder.Entity<AssetValueAtDay>(entity =>
         {
             entity.ToView("AssetValueAtDay");
+            entity.HasNoKey();
+        });
+
+        modelBuilder.Entity<AssetValueAtm>(entity =>
+        {
+            entity.ToView("AssetValueAtm");
             entity.HasNoKey();
         });
 
