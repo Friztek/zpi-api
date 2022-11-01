@@ -21,7 +21,14 @@ public class AssetValuesRepository : IAssetValuesRepository
 
     public async Task<IEnumerable<AssetValueModel>> SearchAsync(IAssetValuesRepository.SearchAssetValues searchModel)
     {
-        var query = context.AssetValuesAtDay.AsQueryable();
+        var asset = await context.Assets.FirstOrDefaultAsync(asset => asset.Identifier == searchModel.AssetName);
+
+        if (asset is null)
+        {
+            throw new AssetNotFoundException(AssetNotFoundException.GenerateBaseMessage(searchModel.AssetName));
+        }
+
+        var query = context.AssetValuesAtDay.Where(e => e.AssetIdentifier == searchModel.AssetName).AsQueryable();
 
         if (searchModel.From.HasValue)
         {
