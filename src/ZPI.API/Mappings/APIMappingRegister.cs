@@ -11,6 +11,7 @@ public sealed class APIMappingRegister : IRegister
     {
         config.NewConfig<AssetModel, AssetDto>()
             .Map(d => d.Category, s => s.Category)
+            .Map(d => d.Symbol, s => s.Symbol)
             .Map(d => d.FriendlyName, s => s.FriendlyName)
             .Map(d => d.Name, s => s.Name)
             .ShallowCopyForSameType(false);

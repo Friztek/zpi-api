@@ -213,6 +213,36 @@ namespace ZPI.Persistance.ZPIDb.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ZPI.Persistance.Entities.AssetValueAtDay", b =>
+                {
+                    b.Property<string>("AssetIdentifier")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<OffsetDateTime>("TimeStamp")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<double>("Value")
+                        .HasColumnType("double precision");
+
+                    b.ToView("AssetValueAtDay");
+                });
+
+                modelBuilder.Entity("ZPI.Persistance.Entities.AssetValueAtm", b =>
+                {
+                    b.Property<string>("AssetIdentifier")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<OffsetDateTime>("TimeStamp")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<double>("Value")
+                        .HasColumnType("double precision");
+
+                    b.ToView("AssetValueAtm");
+                });
+
             modelBuilder.Entity("ZPI.Persistance.Entities.AssetValueEntity", b =>
                 {
                     b.Property<long>("Identifier")

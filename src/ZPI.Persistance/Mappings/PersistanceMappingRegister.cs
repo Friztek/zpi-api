@@ -11,6 +11,7 @@ public sealed class PersistanceMappingRegister : IRegister
     {
         config.NewConfig<AssetEntity, AssetModel>()
             .Map(d => d.Category, s => s.Category)
+            .Map(d => d.Symbol, s => s.Symbol)
             .Map(d => d.FriendlyName, s => s.FriendlyName)
             .Map(d => d.Name, s => s.Identifier)
             .ShallowCopyForSameType(false);
@@ -28,6 +29,12 @@ public sealed class PersistanceMappingRegister : IRegister
             .ShallowCopyForSameType(false);
 
         config.NewConfig<AssetValueAtDay, AssetValueModel>()
+            .Map(d => d.AssetIdentifier, s => s.AssetIdentifier)
+            .Map(d => d.TimeStamp, s => s.TimeStamp)
+            .Map(d => d.Value, s => s.Value)
+            .ShallowCopyForSameType(false);
+
+        config.NewConfig<AssetValueAtm, AssetValueModel>()
             .Map(d => d.AssetIdentifier, s => s.AssetIdentifier)
             .Map(d => d.TimeStamp, s => s.TimeStamp)
             .Map(d => d.Value, s => s.Value)

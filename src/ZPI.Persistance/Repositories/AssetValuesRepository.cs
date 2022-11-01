@@ -21,14 +21,7 @@ public class AssetValuesRepository : IAssetValuesRepository
 
     public async Task<IEnumerable<AssetValueModel>> SearchAsync(IAssetValuesRepository.SearchAssetValues searchModel)
     {
-        var asset = await context.Assets.FirstOrDefaultAsync(asset => asset.Identifier == searchModel.AssetName);
-
-        if (asset is null)
-        {
-            throw new AssetNotFoundException(AssetNotFoundException.GenerateBaseMessage(searchModel.AssetName));
-        }
-
-        var query = context.AssetValuesAtDay.Where(e => e.AssetIdentifier == searchModel.AssetName).AsQueryable();
+        var query = context.AssetValuesAtDay.AsQueryable();
 
         if (searchModel.From.HasValue)
         {
@@ -41,6 +34,13 @@ public class AssetValuesRepository : IAssetValuesRepository
             query = query.Where(e => OffsetDateTime.Comparer.Instant.Compare(e.TimeStamp, dateUpper.At(LocalTime.Midnight)) < 0);
         }
 
+        var values = await query.ToListAsync();
+        return mapper.Map<IEnumerable<AssetValueModel>>(values);
+    }
+
+    public async Task<IEnumerable<AssetValueModel>> SearchAsync(IAssetValuesRepository.GetAssetValues searchModel)
+    {
+        var query = context.AssetValuesAtm.AsQueryable();
         var values = await query.ToListAsync();
         return mapper.Map<IEnumerable<AssetValueModel>>(values);
     }

@@ -10,5 +10,8 @@ public sealed record AssetDto(
     string FriendlyName,
     
     [property: JsonProperty(Required = Required.Always)]
-    string Category
+    string Category,
+
+    [property: JsonProperty(Required = Required.AllowNull)]
+    string Symbol
 );
