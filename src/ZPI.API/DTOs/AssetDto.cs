@@ -13,5 +13,5 @@ public sealed record AssetDto(
     string Category,
 
     [property: JsonProperty(Required = Required.AllowNull)]
-    string Symbol
+    string? Symbol
 );

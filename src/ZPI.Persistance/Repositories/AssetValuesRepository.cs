@@ -47,8 +47,7 @@ public class AssetValuesRepository : IAssetValuesRepository
 
     public async Task<IEnumerable<AssetValueModel>> SearchAsync(IAssetValuesRepository.GetAssetValues searchModel)
     {
-        var query = context.AssetValuesAtm.AsQueryable();
-        var values = await query.ToListAsync();
+        var values = await context.AssetValuesAtm.ToListAsync()
         return mapper.Map<IEnumerable<AssetValueModel>>(values);
     }
 
