@@ -11,9 +11,12 @@ namespace ZPI.API.Endpoints.User.Preferences.Get;
 [Route("api/users")]
 public sealed class UserPreferencesController : UseCaseController<GetUserPreferencesUseCase, GetUserPreferencesPresenter>
 {
-    public UserPreferencesController(ILogger logger, GetUserPreferencesUseCase useCase, GetUserPreferencesPresenter presenter)
+    private readonly IUserInfoService _userInfoService;
+    public UserPreferencesController(ILogger logger, GetUserPreferencesUseCase useCase, GetUserPreferencesPresenter presenter, IUserInfoService userInfoService)
         : base(logger, useCase, presenter)
-    { }
+    {
+        _userInfoService = userInfoService;
+    }
 
     [HttpGet("me/preferences", Name = nameof(GetUserPreferences))]
     [Produces(MediaTypeNames.Application.Json)]
@@ -23,7 +26,8 @@ public sealed class UserPreferencesController : UseCaseController<GetUserPrefere
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     public async ValueTask<IActionResult> GetUserPreferences()
     {
-        await useCase.Execute(new GetUserPreferencesUseCase.Input("masno"), presenter);
+        var userId = _userInfoService.GetCurrentUserId();
+        await useCase.Execute(new GetUserPreferencesUseCase.Input(userId), presenter);
         return await presenter.GetResultAsync();
     }
 }

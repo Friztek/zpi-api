@@ -22,5 +22,6 @@ public static class CoreModule
         services.AddScoped<GetAllUserAssetsUseCase>();
         services.AddScoped<PatchUserAssetsUseCase>();
         services.AddScoped<DeleteUserAssetUseCase>();
+        services.AddScoped<AddUserUseCase>();
     }
 }

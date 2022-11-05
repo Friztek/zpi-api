@@ -75,6 +75,8 @@ WebApplication BuildWebApplication()
     builder.Services.AddControllers()
         .AddNewtonsoftJson(options => jsonSerializerConfigurator.ApplyTo(options.SerializerSettings));
 
+    builder.Services.AddHttpContextAccessor();
+    
     //Register application components
     builder.Services.AddCoreModule();
     builder.Services.AddAPIModule();
@@ -87,10 +89,11 @@ WebApplication BuildWebApplication()
     app.UsePersistanceModule();
 
 
+
     app.UseHttpsRedirection();
     app.UseAuthorization();
     app.UseCors(CorsPolicyName);
-    app.MapControllers();
+    app.MapControllers().RequireAuthorization();
 
     return app;
 }

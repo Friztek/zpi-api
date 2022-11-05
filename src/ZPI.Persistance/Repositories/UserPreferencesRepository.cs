@@ -18,6 +18,22 @@ public class UserPreferencesRepository : IUserPreferencesRepository
         this.mapper = mapper;
     }
 
+    public async Task<UserPreferencesModel> CreateAsync(IUserPreferencesRepository.AddUserFromAuth0 createModel)
+    {
+        var user = new UserPreferencesEntity()
+        {
+            AlertsOnEmail = false,
+            PreferenceCurrency = "USD",
+            UserId = createModel.UserId,
+            WeeklyReports = false
+        };
+
+        var entry = await this.context.AddAsync(user);
+
+        await this.context.SaveChangesAsync();
+        return this.mapper.Map<UserPreferencesModel>(entry.Entity);
+    }
+
     public async Task<UserPreferencesModel> GetAsync(IUserPreferencesRepository.GetUserPreferences getModel)
     {
         var userPreferences = await context.UserPreferences.FirstOrDefaultAsync(userPreference => userPreference.UserId == getModel.UserId);

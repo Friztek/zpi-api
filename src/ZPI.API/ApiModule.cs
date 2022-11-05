@@ -13,6 +13,7 @@ using ZPI.API.Endpoints.User.Assets.Get;
 using ZPI.API.Endpoints.User.Assets.Patch;
 using ZPI.API.Endpoints.User.Preferences.Get;
 using ZPI.API.Endpoints.User.Preferences.Update;
+using ZPI.API.Endpoints.Users.Add;
 using ZPI.API.Mappings;
 using ZPI.AspNetCore.Utils;
 using ZPI.IAPI.Mappings;
@@ -21,13 +22,18 @@ namespace ZPI.API;
 
 public static class ApiModule
 {
-
     public static void AddAPIModule(this IServiceCollection services)
     {
         var logger = services.BuildServiceProvider().GetRequiredService<ILogger>();
         services.RegisterSwagger(logger);
         services.RegisterPresenters(logger);
         services.RegisterMappings(logger);
+        services.RegisterServices(logger);
+    }
+
+    public static void RegisterServices(this IServiceCollection services, ILogger logger)
+    {
+        services.AddScoped<IUserInfoService, UserInfoService>();
     }
 
     public static void UseAPIModule(this IApplicationBuilder app)
@@ -77,6 +83,7 @@ public static class ApiModule
         services.AddScoped<GetAllUserAssetsPresenter>();
         services.AddScoped<DeleteUserAssetsPresenter>();
         services.AddScoped<PatchUserAssetsPresenter>();
+        services.AddScoped<AddUserPresenter>();
     }
 
 
