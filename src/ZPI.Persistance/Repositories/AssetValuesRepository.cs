@@ -51,6 +51,21 @@ public class AssetValuesRepository : IAssetValuesRepository
         return mapper.Map<IEnumerable<AssetValueModel>>(values);
     }
 
+    public async Task<AssetValueModel> GetAsync(IAssetValuesRepository.GetAssetValue searchModel)
+    {
+        var asset = await context.Assets.FirstOrDefaultAsync(asset => asset.Identifier == searchModel.AssetName);
+
+        if (asset is null)
+        {
+            throw new AssetNotFoundException(AssetNotFoundException.GenerateBaseMessage(searchModel.AssetName));
+        }
+
+        var query = context.AssetValuesAtm.Where(e => e.AssetIdentifier == searchModel.AssetName).AsQueryable();
+        var values = query.ToListAsync();
+        var value = values.Result.FirstOrDefault();
+        return mapper.Map<AssetValueModel>(value);
+    }
+
     public async Task<AssetValueModel> UpdateAsync(IAssetValuesRepository.AddAssetValue updateModel)
     {
         var asset = await context.Assets.FirstOrDefaultAsync(asset => asset.Identifier == updateModel.AssetName);
