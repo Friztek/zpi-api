@@ -92,7 +92,7 @@ WebApplication BuildWebApplication()
 
     app.UseHttpsRedirection();
     app.UseAuthorization();
-    app.UseCors(CorsPolicyName);
+    app.UseCors();
     app.MapControllers().RequireAuthorization();
 
     return app;
