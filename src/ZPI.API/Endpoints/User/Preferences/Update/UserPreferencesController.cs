@@ -14,10 +14,12 @@ namespace ZPI.API.Endpoints.User.Preferences.Update;
 public sealed class UserPreferencesController : UseCaseController<UpdateUserPreferencesUseCase, UpdateUserPreferencesPresenter>
 {
     private readonly IAPIMapper mapper;
-    public UserPreferencesController(ILogger logger, UpdateUserPreferencesUseCase useCase, UpdateUserPreferencesPresenter presenter, IAPIMapper mapper)
+    private readonly IUserInfoService service;
+    public UserPreferencesController(ILogger logger, UpdateUserPreferencesUseCase useCase, UpdateUserPreferencesPresenter presenter, IAPIMapper mapper, IUserInfoService service)
         : base(logger, useCase, presenter)
     {
         this.mapper = mapper;
+        this.service = service;
     }
 
     [HttpPut("me/preferences", Name = nameof(UpdateUserPreferences))]
@@ -28,7 +30,8 @@ public sealed class UserPreferencesController : UseCaseController<UpdateUserPref
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     public async ValueTask<IActionResult> UpdateUserPreferences(UpdateUserPreferencesDto dto)
     {
-        await useCase.Execute(new UpdateUserPreferencesUseCase.Input("masno", mapper.Map<UserPreferencesModel>(dto)), presenter);
+        var userId = service.GetCurrentUserId();
+        await useCase.Execute(new UpdateUserPreferencesUseCase.Input(userId, mapper.Map<UserPreferencesModel>(dto)), presenter);
         return await presenter.GetResultAsync();
     }
 }

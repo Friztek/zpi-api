@@ -13,10 +13,12 @@ namespace ZPI.API.Endpoints.User.Assets.Patch;
 public sealed class UserAssetsController : UseCaseController<PatchUserAssetsUseCase, PatchUserAssetsPresenter>
 {
     private readonly IAPIMapper mapper;
-    public UserAssetsController(ILogger logger, PatchUserAssetsUseCase useCase, PatchUserAssetsPresenter presenter, IAPIMapper mapper)
+    private readonly IUserInfoService service;
+    public UserAssetsController(ILogger logger, PatchUserAssetsUseCase useCase, PatchUserAssetsPresenter presenter, IAPIMapper mapper, IUserInfoService service)
         : base(logger, useCase, presenter)
     {
         this.mapper = mapper;
+        this.service = service;
     }
 
     [HttpPatch("me/assets", Name = nameof(PatchUserAssets))]
@@ -27,7 +29,8 @@ public sealed class UserAssetsController : UseCaseController<PatchUserAssetsUseC
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     public async ValueTask<IActionResult> PatchUserAssets(IEnumerable<PatchUserAssetsDto> dto)
     {
-        await useCase.Execute(new PatchUserAssetsUseCase.Input("masno", mapper.Map<IEnumerable<IUserAssetsRepository.UserAssetTransaction>>(dto)), presenter);
+        var userId = service.GetCurrentUserId();
+        await useCase.Execute(new PatchUserAssetsUseCase.Input(userId, mapper.Map<IEnumerable<IUserAssetsRepository.UserAssetTransaction>>(dto)), presenter);
         return await presenter.GetResultAsync();
     }
 }

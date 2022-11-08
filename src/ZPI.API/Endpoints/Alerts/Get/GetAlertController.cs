@@ -23,15 +23,18 @@ namespace ZPI.API.Endpoints.Alerts.Get
         private const string apiUrl = "http://127.0.0.1:8000/api/alert/";
         private readonly IAssetValuesRepository repository;
 
-        public AlertController(IAssetValuesRepository repository)
+        private readonly IUserInfoService service;
+
+        public AlertController(IAssetValuesRepository repository, IUserInfoService service)
         {
             this.repository = repository;
+            this.service = service;
         }
 
         [HttpGet]
         public async Task<Object> Get()
         {
-            var email = "bartek5251@gmail.com";
+            var email = service.GetCurrentUserEmail();
             var respone = await client.GetStringAsync(apiUrl + "?email=" + email);
             var model = JsonConvert.DeserializeObject<List<AlertDto>>(respone);
             return model;
@@ -40,7 +43,7 @@ namespace ZPI.API.Endpoints.Alerts.Get
         [HttpPost]
         public async Task<Object> Post(AlertDto alert)
         {
-            var email = "bartek5251@gmail.com";
+            var email = service.GetCurrentUserEmail();
             var asset_name = alert.OriginAssetName;
             var asset = await this.repository.GetAsync(new IAssetValuesRepository.GetAssetValue(asset_name));
             AlertWithEmailDto alertWithEmail = new AlertWithEmailDto
@@ -64,7 +67,7 @@ namespace ZPI.API.Endpoints.Alerts.Get
         [HttpDelete("{id}")]
         public async Task<Object> Delete(int id)
         {
-            var email = "bartek5251@gmail.com";
+            var email = service.GetCurrentUserEmail();
             var response = await client.DeleteAsync(apiUrl + "?id=" + id + "&email=" + email);
             int statusCode = (int)response.StatusCode;
             HttpContext.Response.StatusCode = statusCode;
