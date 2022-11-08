@@ -8,6 +8,7 @@ using ZPI.Core.UseCases;
 namespace ZPI.API.Endpoints.Assets.GetAll;
 
 [ApiController]
+[AllowAnonymous]
 [Route("api/assets")]
 public sealed class AssetsController : UseCaseController<GetAllAssetsUseCase, GetAllAssetsPresenter>
 {

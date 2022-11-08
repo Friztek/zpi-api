@@ -9,6 +9,7 @@ using ZPI.Core.UseCases;
 namespace ZPI.API.Endpoints.AssetValues.Search;
 
 [ApiController]
+[AllowAnonymous]
 [Route("api/asset-values")]
 public sealed class AssetValuesController : UseCaseController<SearchAssetValuesUseCase, SearchAssetValuesPresenter>
 {
