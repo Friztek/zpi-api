@@ -49,7 +49,7 @@ public class UserAssetsRepository : IUserAssetsRepository
 
         var preferenceCurrencyAsset = await this.context.AssetValues
             .OrderBy(a => a.TimeStamp)
-            .FirstOrDefaultAsync(a => a.AssetIdentifier == user.PreferenceCurrency);
+            .FirstOrDefaultAsync(a => a.AssetIdentifier == user.PreferenceCurrency.ToLower());
 
         if (preferenceCurrencyAsset is null)
         {
@@ -79,6 +79,7 @@ public class UserAssetsRepository : IUserAssetsRepository
 
         var userAssetsToUpdate = await this.context.UserAssets
             .Include(ua => ua.Asset)
+            .Where(u => u.UserId == updateModel.UserId)
             .Where(ua => assetsIdsToUpdate
                 .Contains(ua.AssetIdentifier))
             .ToListAsync();

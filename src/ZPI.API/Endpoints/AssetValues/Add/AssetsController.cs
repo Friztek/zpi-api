@@ -1,4 +1,5 @@
 using System.Net.Mime;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ZPI.API.Abstraction;
 using ZPI.API.DTos;
@@ -8,6 +9,7 @@ namespace ZPI.API.Endpoints.AssetValues.Add;
 
 [ApiController]
 [Route("api/asset-values")]
+[AllowAnonymous]
 public sealed class AssetValuesController : UseCaseController<AddAssetValueUseCase, AddAssetValuePresenter>
 {
     public AssetValuesController(ILogger logger, AddAssetValueUseCase useCase, AddAssetValuePresenter presenter)

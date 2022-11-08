@@ -11,9 +11,12 @@ namespace ZPI.API.Endpoints.User.Assets.Delete;
 [Route("api/users")]
 public sealed class UserAssetsController : UseCaseController<DeleteUserAssetUseCase, DeleteUserAssetsPresenter>
 {
-    public UserAssetsController(ILogger logger, DeleteUserAssetUseCase useCase, DeleteUserAssetsPresenter presenter)
+    private readonly IUserInfoService service;
+    public UserAssetsController(ILogger logger, DeleteUserAssetUseCase useCase, DeleteUserAssetsPresenter presenter, IUserInfoService service)
         : base(logger, useCase, presenter)
-    { }
+    { 
+        this.service = service;
+    }
 
     [HttpDelete("me/assets/{assetName}", Name = nameof(DeleteUserAsset))]
     [Produces(MediaTypeNames.Application.Json)]
@@ -23,7 +26,8 @@ public sealed class UserAssetsController : UseCaseController<DeleteUserAssetUseC
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     public async ValueTask<IActionResult> DeleteUserAsset(string assetName)
     {
-        await useCase.Execute(new DeleteUserAssetUseCase.Input("masno", assetName), presenter);
+        var userId = service.GetCurrentUserId();
+        await useCase.Execute(new DeleteUserAssetUseCase.Input(userId, assetName), presenter);
         return await presenter.GetResultAsync();
     }
 }

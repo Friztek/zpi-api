@@ -43,6 +43,12 @@ public sealed class APIMappingRegister : IRegister
             .Map(d => d.Value, s => s.Value)
             .ShallowCopyForSameType(false);
 
+        config.NewConfig<TransactionModel, TransactionDto>()
+            .Map(d => d.AssetIdentifier, s => s.AssetIdentifier)
+            .Map(d => d.TimeStamp, s => s.TimeStamp)
+            .Map(d => d.Value, s => s.Value)
+            .ShallowCopyForSameType(false);
+
         config.NewConfig<UserPreferencesModel, UserPreferencesDto>()
             .Map(d => d.AlertsOnEmail, s => s.AlertsOnEmail)
             .Map(d => d.PreferenceCurrency, s => s.PreferenceCurrency)
