@@ -15,12 +15,16 @@ public sealed class GetAssetValuesUseCase : IUseCase<GetAssetValuesUseCase.Input
         this.repository = repository;
     }
 
-     public async Task Execute(Input inputPort, IOutput outputPort)
+    public async Task Execute(Input inputPort, IOutput outputPort)
     {
         try
         {
             var assets = await this.repository.SearchAsync(new IAssetValuesRepository.GetAssetValues());
             outputPort.Success(assets);
+        }
+        catch (AssetNotFoundException e)
+        {
+
         }
         catch (Exception e)
         {

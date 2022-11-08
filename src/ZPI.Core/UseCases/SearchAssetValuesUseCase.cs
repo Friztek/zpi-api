@@ -22,6 +22,10 @@ public sealed class SearchAssetValuesUseCase : IUseCase<SearchAssetValuesUseCase
             var assetValues = await this.repository.SearchAsync(inputPort);
             outputPort.Success(assetValues);
         }
+        catch (AssetNotFoundException e)
+        {
+            outputPort.AssetNotFound(e.Message);
+        }
         catch (Exception e)
         {
             outputPort.UnknownError(e);
@@ -37,6 +41,7 @@ public sealed class SearchAssetValuesUseCase : IUseCase<SearchAssetValuesUseCase
     public interface IOutput : IOutputPort
     {
         public void Success(IEnumerable<AssetValueModel> assetValues);
+        public void AssetNotFound(string message);
         public void UnknownError(Exception exception);
     }
 }

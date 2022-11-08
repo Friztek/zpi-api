@@ -2,6 +2,7 @@ using NodaTime;
 using ZPI.Core.Abstraction;
 using ZPI.Core.Abstraction.Repositories;
 using ZPI.Core.Domain;
+using ZPI.Core.Exceptions;
 
 namespace ZPI.Core.UseCases;
 
@@ -20,6 +21,10 @@ public sealed class AddAssetValueUseCase : IUseCase<AddAssetValueUseCase.Input, 
         {
             var asset = await this.repository.UpdateAsync(inputPort);
             outputPort.Success(asset);
+        }
+        catch (AssetNotFoundException e)
+        {
+            outputPort.AssetNotFound(e.Message);
         }
         catch (Exception e)
         {
@@ -40,6 +45,7 @@ public sealed class AddAssetValueUseCase : IUseCase<AddAssetValueUseCase.Input, 
     public interface IOutput : IOutputPort
     {
         public void Success(AssetValueModel asset);
+        public void AssetNotFound(string message);
         public void UnknownError(Exception exception);
     }
 }

@@ -14,6 +14,8 @@ public sealed class AddAssetValuePresenter : ActionResultPresenterBase, AddAsset
         this.mapper = mapper;
     }
 
+    public void AssetNotFound(string message) => SetResult(ActionResultFactory.NotFound404(message));
+
     public void Success(AssetValueModel model) => SetResult(ActionResultFactory.NoContent());
 
     public void UnknownError(Exception exception) => SetException(exception);

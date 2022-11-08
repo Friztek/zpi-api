@@ -14,6 +14,8 @@ public sealed class SearchAssetValuesPresenter : ActionResultPresenterBase, Sear
         this.mapper = mapper;
     }
 
+    public void AssetNotFound(string message) => SetResult(ActionResultFactory.NotFound404(message));
+
     public void Success(IEnumerable<AssetValueModel> assetValues) => SetResult(ActionResultFactory.Ok200(mapper.Map<IEnumerable<AssetValueDto>>(assetValues)));
 
     public void UnknownError(Exception exception) => SetException(exception);
