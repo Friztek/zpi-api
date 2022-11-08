@@ -23,5 +23,6 @@ public static class CoreModule
         services.AddScoped<PatchUserAssetsUseCase>();
         services.AddScoped<DeleteUserAssetUseCase>();
         services.AddScoped<AddUserUseCase>();
+        services.AddScoped<PatchUserUseCase>();
     }
 }

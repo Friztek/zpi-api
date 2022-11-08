@@ -18,21 +18,16 @@ public sealed class PatchUserUseCase : IUseCase<PatchUserUseCase.Input, PatchUse
     {
         try
         {
-            var user = await this.repository.GetAsync(inputPort.UserId);
-
-            if (inputPort.NewEmail is string newEmail)
-            {
-                await this.repository.UpdateAsync(new IUsersRepository.UpdateEmail(inputPort.UserId, newEmail));
-                user = user with { Email = newEmail };
-            }
+            // if (inputPort.NewEmail is string newEmail)
+            // {
+            //     await this.repository.UpdateEmail(inputPort.UserId, newEmail);
+            // }
 
             if (inputPort.NewName is string newName)
             {
-                await this.repository.UpdateAsync(new IUsersRepository.UpdateName(inputPort.UserId, newName));
-                user = user with { FullName = newName };
+                await this.repository.UpdateFullName(inputPort.UserId, newName);
             }
 
-            outputPort.Success(user);
         }
         catch (UserNotFoundException e)
         {
@@ -52,7 +47,7 @@ public sealed class PatchUserUseCase : IUseCase<PatchUserUseCase.Input, PatchUse
 
     public interface IOutput : IOutputPort
     {
-        public void Success(UserModel user);
+        public void Success();
         public void UserNotFound(UserNotFoundException exception);
         public void UnknownError(Exception exception);
     }

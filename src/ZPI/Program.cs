@@ -11,6 +11,7 @@ using ZPI.API;
 using ZPI.API.Configuration;
 using ZPI.AspNetCore.Utils;
 using ZPI.Core;
+using ZPI.Integrations;
 using ZPI.Persistance;
 
 #if DEBUG
@@ -76,11 +77,13 @@ WebApplication BuildWebApplication()
         .AddNewtonsoftJson(options => jsonSerializerConfigurator.ApplyTo(options.SerializerSettings));
 
     builder.Services.AddHttpContextAccessor();
-    
+
+    builder.Services.AddMemoryCache();
     //Register application components
     builder.Services.AddCoreModule();
     builder.Services.AddAPIModule();
     builder.Services.AddPersistanceModule(builder.Configuration);
+    builder.Services.AddIntegrationsModule(builder.Configuration);
 
     var app = builder.Build();
 
