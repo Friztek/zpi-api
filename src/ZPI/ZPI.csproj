@@ -38,6 +38,7 @@
     <ProjectReference Include="../ZPI.Core/ZPI.Core.csproj" />
     <ProjectReference Include="../ZPI.API/ZPI.API.csproj" />
     <ProjectReference Include="../ZPI.Persistance/ZPI.Persistance.csproj" />
+    <ProjectReference Include="../ZPI.Integrations.Auth0/ZPI.Integrations.Auth0.csproj" />
     <ProjectReference Include="../ZPI.Utils/ZPI.Utils.csproj" />
   </ItemGroup>
 

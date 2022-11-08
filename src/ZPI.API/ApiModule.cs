@@ -14,6 +14,7 @@ using ZPI.API.Endpoints.User.Assets.Patch;
 using ZPI.API.Endpoints.User.Preferences.Get;
 using ZPI.API.Endpoints.User.Preferences.Update;
 using ZPI.API.Endpoints.Users.Add;
+using ZPI.API.Endpoints.Users.Patch;
 using ZPI.API.Mappings;
 using ZPI.AspNetCore.Utils;
 using ZPI.IAPI.Mappings;
@@ -84,6 +85,7 @@ public static class ApiModule
         services.AddScoped<DeleteUserAssetsPresenter>();
         services.AddScoped<PatchUserAssetsPresenter>();
         services.AddScoped<AddUserPresenter>();
+        services.AddScoped<PatchUserPresenter>();
     }
 
 
