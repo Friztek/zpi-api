@@ -1,5 +1,6 @@
 
 using Microsoft.EntityFrameworkCore;
+using NodaTime;
 using Npgsql;
 using ZPI.Persistance.Entities;
 
@@ -56,6 +57,15 @@ public sealed class ZPIDbContext : DbContext
                 new AssetEntity { Identifier = "hrk", FriendlyName = "Croatian Kuna", Category = "currency", Symbol = "kn" },
                 new AssetEntity { Identifier = "usd", FriendlyName = "United States Dollar", Category = "currency", Symbol = "$" }
             );
+
+        modelBuilder.Entity<AssetValueEntity>().HasData(
+            new AssetValueEntity {
+                AssetIdentifier = "usd",
+                Identifier = -1,
+                Value = 1,
+                TimeStamp = new OffsetDateTime()
+            }
+        );
 
         modelBuilder.Entity<AssetEntity>(entity =>
         {
