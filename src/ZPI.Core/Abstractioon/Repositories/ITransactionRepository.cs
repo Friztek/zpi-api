@@ -8,5 +8,5 @@ public interface ITransactionepository :
     ISearchRepository<ITransactionepository.GetTransactions, TransactionModel>
 
 {
-    public record GetTransactions(string AssetName, OffsetDate? From, OffsetDate? To, string UserId);
+    public record GetTransactions(OffsetDate? From, OffsetDate? To, string UserId);
 }
