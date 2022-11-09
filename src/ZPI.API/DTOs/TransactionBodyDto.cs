@@ -3,16 +3,10 @@ using NodaTime;
 
 namespace ZPI.API.DTos;
 
-public sealed record TransactionBodyDto(
-    [property: JsonProperty(Required = Required.Always)]
-    string AssetIdentifier,
-
-    [property: JsonProperty(Required = Required.Always)]
-    double Value,
-    
+public sealed record TransactionBodyDto(    
     [property: JsonProperty(Required = Required.Default)]
-    OffsetDateTime? From,
+    OffsetDate? From,
 
     [property: JsonProperty(Required = Required.Default)]
-    OffsetDateTime? To
+    OffsetDate? To
 );

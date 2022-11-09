@@ -21,15 +21,7 @@ public class TransactionRepository : ITransactionepository
 
     public async Task<IEnumerable<TransactionModel>> SearchAsync(ITransactionepository.GetTransactions searchModel)
     {
-        var asset = await context.Assets.FirstOrDefaultAsync(asset => asset.Identifier == searchModel.AssetName);
-
-        if (asset is null)
-        {
-            throw new AssetNotFoundException(AssetNotFoundException.GenerateBaseMessage(searchModel.AssetName));
-        }
-
         var query = context.Transactions
-        .Where(e => e.AssetIdentifier == searchModel.AssetName)
         .Where(e => e.UserIdentifier == searchModel.UserId)
         .AsQueryable();
 
