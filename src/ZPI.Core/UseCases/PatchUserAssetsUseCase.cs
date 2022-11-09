@@ -25,6 +25,10 @@ public sealed class PatchUserAssetsUseCase : IUseCase<PatchUserAssetsUseCase.Inp
         {
             outputPort.UserNotFound(e);
         }
+        catch (AssetNotFoundException e)
+        {
+            outputPort.AssetNotFound(e);
+        }
         catch (Exception e)
         {
             outputPort.UnknownError(e);
@@ -39,6 +43,7 @@ public sealed class PatchUserAssetsUseCase : IUseCase<PatchUserAssetsUseCase.Inp
     public interface IOutput : IOutputPort
     {
         public void Success(IEnumerable<UserAssetModel> userAssets);
+        public void AssetNotFound(AssetNotFoundException exception);
         public void UserNotFound(UserNotFoundException exception);
         public void UnknownError(Exception exception);
     }

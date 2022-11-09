@@ -57,12 +57,16 @@ public class UserAssetsRepository : IUserAssetsRepository
             throw new Exception();
         }
 
+        var assetValues = await this.context.AssetValuesAtm.ToListAsync();
+
         var userAssets = await this.context.UserAssets
                     .Include(ua => ua.Asset)
                     .Where(ua => ua.UserId == searchModel.UserId)
                     .ToListAsync();
 
-        return userAssets.Select(userAsset => this.mapper.Map<UserAssetModel>((userAsset, userAsset.Value * preferenceCurrencyAsset.Value)));
+        return userAssets.Select(userAsset => this.mapper.Map<UserAssetModel>((userAsset,
+            assetValues.FirstOrDefault(val => val.AssetIdentifier == userAsset.AssetIdentifier).Value * userAsset.Value / preferenceCurrencyAsset.Value
+        )));
 
     }
 
@@ -90,13 +94,10 @@ public class UserAssetsRepository : IUserAssetsRepository
 
             switch (command.Type)
             {
-                case TransactionType.Add:
+                case OperationType.Update:
                     assetToUpdate.Value += command.Value;
                     break;
-                case TransactionType.Subtract:
-                    assetToUpdate.Value -= command.Value;
-                    break;
-                case TransactionType.Update:
+                case OperationType.Set:
                     assetToUpdate.Value = command.Value;
                     break;
             }
@@ -112,7 +113,7 @@ public class UserAssetsRepository : IUserAssetsRepository
 
             if (asset is null)
             {
-                // todo
+                throw new AssetNotFoundException(AssetNotFoundException.GenerateBaseMessage(assetToCreate.AssetName));
             }
 
             var newAsset = new UserAssetEntity()
@@ -120,7 +121,7 @@ public class UserAssetsRepository : IUserAssetsRepository
                 Asset = asset,
                 AssetIdentifier = asset.Identifier,
                 UserId = updateModel.UserId,
-                Value = assetToCreate.Type == TransactionType.Subtract ? -assetToCreate.Value : assetToCreate.Value
+                Value = assetToCreate.Value
             };
 
             this.context.UserAssets.Add(newAsset);
@@ -130,6 +131,13 @@ public class UserAssetsRepository : IUserAssetsRepository
 
         await this.context.SaveChangesAsync();
 
-        return userAssetsToUpdate.Select(a => this.mapper.Map<UserAssetModel>((a, 2d)));
+        var assetValues = await context.AssetValuesAtm.ToListAsync();
+        var preferenceCurrency = assetValues.FirstOrDefault(a => a.AssetIdentifier == user.PreferenceCurrency);
+
+
+        return userAssetsToUpdate.Select(asset => this.mapper.Map<UserAssetModel>((
+            asset,
+            assetValues.FirstOrDefault(val => val.AssetIdentifier == asset.AssetIdentifier).Value * asset.Value / preferenceCurrency.Value
+            )));
     }
 }
