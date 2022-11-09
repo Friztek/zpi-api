@@ -28,7 +28,7 @@ public sealed class APIMappingRegister : IRegister
             .Map(d => d.UserCurrencyValue, s => s.UserCurrencyValue)
             .ShallowCopyForSameType(false);
 
-        config.NewConfig<Core.Domain.TransactionType, API.DTos.TransactionType>()
+        config.NewConfig<Core.Domain.OperationType, API.DTos.OperationType>()
             .TwoWays();
 
         config.NewConfig<PatchUserAssetsDto, IUserAssetsRepository.UserAssetTransaction>()

@@ -15,6 +15,8 @@ public sealed class PatchUserAssetsPresenter : ActionResultPresenterBase, PatchU
         this.mapper = mapper;
     }
 
+    public void AssetNotFound(AssetNotFoundException exception) => SetResult(ActionResultFactory.NotFound404(exception.Message));
+
     public void Success(IEnumerable<UserAssetModel> userAssets) => SetResult(ActionResultFactory.Ok200(mapper.Map<IEnumerable<UserAssetDto>>(userAssets)));
 
     public void UnknownError(Exception exception) => SetException(exception);
