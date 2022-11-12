@@ -8,6 +8,7 @@ using ZPI.Core.UseCases;
 
 namespace ZPI.API.Endpoints.AssetValues.Get
 {
+[AllowAnonymous]
 [ApiController]
 [Route("api/asset-values")]
 public sealed class GetAssetValuesController : UseCaseController<GetAssetValuesUseCase, GetAssetValuesPresenter>
@@ -16,6 +17,7 @@ public sealed class GetAssetValuesController : UseCaseController<GetAssetValuesU
         : base(logger, useCase, presenter)
     { }
 
+    [HttpGet]
     [Produces(MediaTypeNames.Application.Json)]
     [Consumes(MediaTypeNames.Application.Json)]
     [ProducesDefaultResponseType]
