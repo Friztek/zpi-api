@@ -3,9 +3,6 @@ namespace ZPI.API.DTOs
 {
 
 public sealed record AlertDto(
-    [property: JsonProperty(Required = Required.Default)]
-    int? AlertId,
-
     [property: JsonProperty(Required = Required.Always)]
     double Value,
     
