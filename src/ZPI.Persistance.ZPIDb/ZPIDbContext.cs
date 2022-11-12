@@ -24,6 +24,8 @@ public sealed class ZPIDbContext : DbContext
     public DbSet<AlertEntity> Alerts { get; init; }
     public DbSet<AssetValueEntity> AssetValues { get; init; }
     public DbSet<TransactionEntity> Transactions { get; init; }
+    public DbSet<WalletEntity> Wallets { get; init; }
+
     public DbSet<UserAssetEntity> UserAssets { get; init; }
     public DbSet<UserPreferencesEntity> UserPreferences { get; init; }
     public DbSet<AssetValueAtDay> AssetValuesAtDay { get; init; }
@@ -106,6 +108,11 @@ public sealed class ZPIDbContext : DbContext
         modelBuilder.Entity<UserPreferencesEntity>(entity =>
         {
             entity.HasKey(e => e.UserId);
+        });
+
+        modelBuilder.Entity<WalletEntity>(entity =>
+        {
+            entity.HasKey(e => e.Identifier);
         });
 
         modelBuilder.Entity<TransactionEntity>(entity =>

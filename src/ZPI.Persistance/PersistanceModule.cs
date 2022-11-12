@@ -66,6 +66,7 @@ public static class PersistanceModule
         services.AddScoped<IUserPreferencesRepository, UserPreferencesRepository>();
         services.AddScoped<IAssetValuesRepository, AssetValuesRepository>();
         services.AddScoped<ITransactionepository, TransactionRepository>();
+        services.AddScoped<IWalletRepository, WalletRepository>();
         services.AddScoped<IUserAssetsRepository, UserAssetsRepository>();
     }
 
