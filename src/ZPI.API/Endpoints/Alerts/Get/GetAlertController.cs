@@ -36,7 +36,7 @@ namespace ZPI.API.Endpoints.Alerts.Get
         {
             var email = service.GetCurrentUserEmail();
             var respone = await client.GetStringAsync(apiUrl + "?email=" + email);
-            var model = JsonConvert.DeserializeObject<List<AlertDto>>(respone);
+            var model = JsonConvert.DeserializeObject<List<AlertWithActiveDto>>(respone);
             return model;
         }
 
