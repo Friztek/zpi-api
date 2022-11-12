@@ -23,7 +23,7 @@ public class UserPreferencesRepository : IUserPreferencesRepository
         var user = new UserPreferencesEntity()
         {
             AlertsOnEmail = false,
-            PreferenceCurrency = "USD",
+            PreferenceCurrency = "usd",
             UserId = createModel.UserId,
             WeeklyReports = false
         };
