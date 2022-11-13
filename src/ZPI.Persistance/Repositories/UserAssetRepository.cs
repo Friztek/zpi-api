@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using NodaTime;
+using NodaTime.Extensions;
 using ZPI.Core.Abstraction.Repositories;
 using ZPI.Core.Domain;
 using ZPI.Core.Exceptions;
@@ -18,6 +20,25 @@ public class UserAssetsRepository : IUserAssetsRepository
         this.mapper = mapper;
     }
 
+    private void AddTransactionsRange(IEnumerable<TransactionEntity> transactions)
+    {
+        var currentTime = SystemClock.Instance.InUtc().GetCurrentOffsetDateTime();
+
+        this.context.Transactions.AddRange(transactions.Select(transaction =>
+        {
+            transaction.TimeStamp = currentTime;
+            return transaction;
+        }));
+    }
+
+    private void AddTransaction(TransactionEntity transaction)
+    {
+        var currentTime = SystemClock.Instance.InUtc().GetCurrentOffsetDateTime();
+        transaction.TimeStamp = currentTime;
+
+        this.context.Transactions.Add(transaction);
+    }
+
     public async Task DeleteAsync(IUserAssetsRepository.DeleteUserAsset deleteModel)
     {
         var user = await this.context.UserPreferences.FirstOrDefaultAsync(u => u.UserId == deleteModel.UserId);
@@ -29,12 +50,18 @@ public class UserAssetsRepository : IUserAssetsRepository
 
         var userAsset = await this.context.UserAssets.FirstOrDefaultAsync(ua => ua.UserId == deleteModel.UserId && ua.AssetIdentifier == deleteModel.AssetName);
 
-        // TODO add checking if asset exist
-        // if (userAsset is null){
 
-        // }
+        var transaction = new TransactionEntity()
+        {
+            AssetIdentifier = deleteModel.AssetName,
+            UserIdentifier = deleteModel.UserId,
+            Value = -userAsset.Value
+        };
+
+        AddTransaction(transaction);
 
         this.context.UserAssets.Remove(userAsset);
+
         await this.context.SaveChangesAsync();
     }
 
@@ -73,6 +100,7 @@ public class UserAssetsRepository : IUserAssetsRepository
     public async Task<IEnumerable<UserAssetModel>> UpdateAsync(IUserAssetsRepository.PatchUserAssets updateModel)
     {
         var user = await this.context.UserPreferences.FirstOrDefaultAsync(u => u.UserId == updateModel.UserId);
+        var transactions = new List<TransactionEntity>();
 
         if (user is null)
         {
@@ -101,6 +129,15 @@ public class UserAssetsRepository : IUserAssetsRepository
                     assetToUpdate.Value = command.Value;
                     break;
             }
+
+            transactions.Add(new TransactionEntity()
+            {
+                AssetIdentifier = assetToUpdate.AssetIdentifier,
+                UserIdentifier = updateModel.UserId,
+                Value = command.Type == OperationType.Update ? command.Value : command.Value - assetToUpdate.Value
+            }
+
+        );
         }
 
         var existingAssets = userAssetsToUpdate.Select(ua => ua.AssetIdentifier);
@@ -124,11 +161,18 @@ public class UserAssetsRepository : IUserAssetsRepository
                 Value = assetToCreate.Value
             };
 
+            transactions.Add(new TransactionEntity()
+            {
+                AssetIdentifier = assetToCreate.AssetName,
+                UserIdentifier = updateModel.UserId,
+                Value = assetToCreate.Value
+            });
+
             this.context.UserAssets.Add(newAsset);
             userAssetsToUpdate.Add(newAsset);
         }
 
-
+        AddTransactionsRange(transactions);
         await this.context.SaveChangesAsync();
 
         var assetValues = await context.AssetValuesAtm.ToListAsync();
