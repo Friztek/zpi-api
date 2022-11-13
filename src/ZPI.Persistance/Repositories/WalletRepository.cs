@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
+using NodaTime.Extensions;
 using ZPI.Core.Abstraction.Repositories;
 using ZPI.Core.Domain;
 using ZPI.Core.Exceptions;
@@ -40,7 +41,8 @@ public class WalletRepository : IWalletRepository
         return mapper.Map<IEnumerable<WalletModel>>(values);
     }
 
-    public async Task<double> GetAsync(IWalletRepository.GetWallet searchModel) {
+    public async Task<double> GetAsync(IWalletRepository.GetWallet searchModel)
+    {
         var user = await this.context.UserPreferences.FirstOrDefaultAsync(u => u.UserId == searchModel.UserId);
 
         if (user is null)
@@ -68,13 +70,31 @@ public class WalletRepository : IWalletRepository
         var assets = userAssets.Select(userAsset => this.mapper.Map<UserAssetModel>((userAsset,
             assetValues.FirstOrDefault(val => val.AssetIdentifier == userAsset.AssetIdentifier).Value * userAsset.Value / preferenceCurrencyAsset.Value
         )));
-        
+
         double all_assets = 0;
-        foreach(UserAssetModel asset in assets)
+        foreach (UserAssetModel asset in assets)
         {
             all_assets += asset.UserCurrencyValue;
         }
         return all_assets;
 
+    }
+
+    public async Task SyncUserWallets()
+    {
+        var userIds = await this.context.UserPreferences
+                        .Select(user => user.UserId)
+                        .ToListAsync();
+
+        var now = SystemClock.Instance.InUtc().GetCurrentOffsetDateTime();
+
+        foreach (var userId in userIds)
+        {
+            var walletValue = await this.GetAsync(new IWalletRepository.GetWallet(userId));
+            var userWallet = new WalletEntity() { Value = walletValue, UserIdentifier = userId, TimeStamp = now };
+            this.context.Add(userWallet);
+        }
+
+        await this.context.SaveChangesAsync();
     }
 }

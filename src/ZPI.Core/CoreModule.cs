@@ -24,5 +24,6 @@ public static class CoreModule
         services.AddScoped<DeleteUserAssetUseCase>();
         services.AddScoped<AddUserUseCase>();
         services.AddScoped<PatchUserUseCase>();
+        services.AddScoped<SyncWalletValuesUseCase>();
     }
 }
