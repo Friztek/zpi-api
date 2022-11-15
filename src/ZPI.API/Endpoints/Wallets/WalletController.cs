@@ -47,10 +47,13 @@ public class WalletController : ControllerBase
     public async Task<Object> GetTotalWallet()
     {
         var id = service.GetCurrentUserId();
-        var value = await this.repository.GetAsync(new IWalletRepository.GetWallet(id));
+        (double all_assets, double currency_assets, double crypto_assets, double metal_assets) = await this.repository.GetAsync(new IWalletRepository.GetWallet(id));
         FullWalletDto walletValue = new FullWalletDto
             {
-                TotalValue = value
+                TotalValue = all_assets,
+                CryptoTotalValue = crypto_assets,
+                CurrencyTotalValue = currency_assets,
+                MetalTotalValue = metal_assets
             };
         return walletValue;
     }

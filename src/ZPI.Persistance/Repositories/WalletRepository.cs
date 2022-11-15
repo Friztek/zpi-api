@@ -40,7 +40,7 @@ public class WalletRepository : IWalletRepository
         return mapper.Map<IEnumerable<WalletModel>>(values);
     }
 
-    public async Task<double> GetAsync(IWalletRepository.GetWallet searchModel) {
+    public async Task<Tuple<double, double, double, double>> GetAsync(IWalletRepository.GetWallet searchModel) {
         var user = await this.context.UserPreferences.FirstOrDefaultAsync(u => u.UserId == searchModel.UserId);
 
         if (user is null)
@@ -69,12 +69,22 @@ public class WalletRepository : IWalletRepository
             assetValues.FirstOrDefault(val => val.AssetIdentifier == userAsset.AssetIdentifier).Value * userAsset.Value / preferenceCurrencyAsset.Value
         )));
         
-        double all_assets = 0;
+        var all_assets = 0d;
+        var currency_assets = 0d;
+        var crypto_assets = 0d;
+        var metal_assets = 0d;
         foreach(UserAssetModel asset in assets)
         {
             all_assets += asset.UserCurrencyValue;
+            if (asset.Asset.Category == "crypto")
+                currency_assets += asset.UserCurrencyValue;
+            if (asset.Asset.Category == "currency")
+                crypto_assets += asset.UserCurrencyValue;
+            if (asset.Asset.Category == "metal")
+                metal_assets += asset.UserCurrencyValue;
+            
         }
-        return all_assets;
+        return Tuple.Create(all_assets, currency_assets, crypto_assets, metal_assets);
 
     }
 }

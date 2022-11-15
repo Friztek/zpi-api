@@ -43,6 +43,10 @@ namespace ZPI.API.Endpoints.Alerts.Get
         [HttpPost]
         public async Task<Object> Post(AlertDto alert)
         {
+            if (alert.Currency == alert.OriginAssetName) {
+                HttpContext.Response.StatusCode = 400;
+                return "Same target currency and origin asset name";
+            }
             var email = service.GetCurrentUserEmail();
             var asset_name = alert.OriginAssetName;
             var asset = await this.repository.GetAsync(new IAssetValuesRepository.GetAssetValue(asset_name));
@@ -57,10 +61,12 @@ namespace ZPI.API.Endpoints.Alerts.Get
             var json = JsonConvert.SerializeObject(alertWithEmail);
             var content = new StringContent(json.ToString(), Encoding.UTF8, "application/json");
             var response = await client.PostAsync(apiUrl, content);
+            var contents = await response.Content.ReadAsStringAsync();
             int statusCode = (int)response.StatusCode;
+            var model = JsonConvert.DeserializeObject<AlertWithActiveDto>(contents);
             HttpContext.Response.StatusCode = statusCode;
             if (statusCode == 200)
-                return true;
+                return model;
             return false;
         }
 

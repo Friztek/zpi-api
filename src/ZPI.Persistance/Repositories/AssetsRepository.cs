@@ -24,4 +24,14 @@ public class AssetsRepository : IAssetsRepository
 
         return this.mapper.Map<IEnumerable<AssetModel>>(assets);
     }
+
+    public async Task<AssetModel> GetAsync(IAssetsRepository.GetAssetByName searchModel)
+    {
+        var asset = await context.Assets.FirstOrDefaultAsync(asset => asset.Identifier == searchModel.assetName);
+        if (asset is null)
+        {
+            throw new AssetNotFoundException(AssetNotFoundException.GenerateBaseMessage(searchModel.assetName));
+        }
+        return this.mapper.Map<AssetModel>(asset);
+    }
 }
