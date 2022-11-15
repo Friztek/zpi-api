@@ -6,7 +6,7 @@ namespace ZPI.Core.Abstraction.Repositories;
 
 public interface IWalletRepository:
     ISearchRepository<IWalletRepository.GetWallets, WalletModel>,
-    IGetRepository<IWalletRepository.GetWallet, double>
+    IGetRepository<IWalletRepository.GetWallet, Tuple<double, double, double, double>>
     
     
 {
