@@ -9,7 +9,7 @@ public interface IWalletRepository :
     IGetRepository<IWalletRepository.GetWallet, double>
 {
     public Task SyncUserWallets();
-    public record GetWallets(OffsetDate? From, OffsetDate? To, string UserId);
+    public record GetWallets(LocalDate? From, LocalDate? To, string UserId);
     public record GetWallet(string UserId);
 
 }

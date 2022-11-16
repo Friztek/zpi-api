@@ -9,6 +9,7 @@ using ZPI.Core.UseCases;
 
 public class WorkerService : BackgroundService
 {
+    private readonly PeriodicTimer timer = new(TimeSpan.FromSeconds(10));
     private readonly IServiceProvider services;
 
     public WorkerService(IServiceProvider services)
@@ -16,24 +17,14 @@ public class WorkerService : BackgroundService
         this.services = services;
     }
 
-    private static int CalculateWaitTimeInMilliseconds()
-    {
-        var now = SystemClock.Instance.InUtc().GetCurrentOffsetDateTime();
-        var nextDay = new OffsetDate(now.Date.PlusDays(1), now.Offset).At(LocalTime.Midnight);
-
-        return (int)(nextDay - now).TotalMilliseconds;
-    }
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        while (!stoppingToken.IsCancellationRequested)
+        while (await timer.WaitForNextTickAsync(stoppingToken) && !stoppingToken.IsCancellationRequested)
         {
-            var waitTime = CalculateWaitTimeInMilliseconds();
-            await Task.Delay(waitTime, stoppingToken);
-            await DoBackupAsync();
-            await Task.Delay(23132323, stoppingToken);
+            await DoJobAsync();
         }
     }
-    private async Task DoBackupAsync()
+    private async Task DoJobAsync()
     {
         using var scope = services.CreateScope();
 

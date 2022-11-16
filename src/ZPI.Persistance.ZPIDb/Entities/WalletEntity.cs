@@ -7,5 +7,5 @@ public class WalletEntity
     public long Identifier { get; set; }
     public string UserIdentifier { get; set; }
     public double Value { get; set; }
-    public OffsetDateTime TimeStamp { get; set; }
+    public LocalDate DateStamp { get; set; }
 }   

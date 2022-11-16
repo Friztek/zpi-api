@@ -28,13 +28,12 @@ public class WalletRepository : IWalletRepository
 
         if (searchModel.From.HasValue)
         {
-            query = query.Where(e => OffsetDateTime.Comparer.Instant.Compare(e.TimeStamp, searchModel.From.Value.At(LocalTime.Midnight)) > 0);
+            query = query.Where(e => e.DateStamp >= searchModel.From.Value);
         }
 
         if (searchModel.To.HasValue)
         {
-            var dateUpper = new OffsetDate(searchModel.To.Value.Date.PlusDays(1), searchModel.To.Value.Offset);
-            query = query.Where(e => OffsetDateTime.Comparer.Instant.Compare(e.TimeStamp, dateUpper.At(LocalTime.Midnight)) < 0);
+            query = query.Where(e => e.DateStamp <= searchModel.To.Value);
         }
 
         var values = await query.ToListAsync();
@@ -86,13 +85,22 @@ public class WalletRepository : IWalletRepository
                         .Select(user => user.UserId)
                         .ToListAsync();
 
-        var now = SystemClock.Instance.InUtc().GetCurrentOffsetDateTime();
+        var now = SystemClock.Instance.InUtc().GetCurrentDate();
 
         foreach (var userId in userIds)
         {
             var walletValue = await this.GetAsync(new IWalletRepository.GetWallet(userId));
-            var userWallet = new WalletEntity() { Value = walletValue, UserIdentifier = userId, TimeStamp = now };
-            this.context.Add(userWallet);
+            var lastWallet = await this.context.Wallets.Where(wallet => wallet.UserIdentifier == userId).OrderBy(a => a.DateStamp).LastOrDefaultAsync();
+            if (lastWallet is not null && now == lastWallet.DateStamp)
+            {
+                lastWallet.Value = walletValue;
+                this.context.Update(lastWallet);
+            }
+            else
+            {
+                var userWallet = new WalletEntity() { Value = walletValue, UserIdentifier = userId, DateStamp = now };
+                this.context.Add(userWallet);
+            }
         }
 
         await this.context.SaveChangesAsync();
