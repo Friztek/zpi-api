@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
+using NodaTime.Extensions;
 using ZPI.Core.Abstraction.Repositories;
 using ZPI.Core.Domain;
 using ZPI.Core.Exceptions;
@@ -27,20 +28,20 @@ public class WalletRepository : IWalletRepository
 
         if (searchModel.From.HasValue)
         {
-            query = query.Where(e => OffsetDateTime.Comparer.Instant.Compare(e.TimeStamp, searchModel.From.Value.At(LocalTime.Midnight)) > 0);
+            query = query.Where(e => e.DateStamp >= searchModel.From.Value);
         }
 
         if (searchModel.To.HasValue)
         {
-            var dateUpper = new OffsetDate(searchModel.To.Value.Date.PlusDays(1), searchModel.To.Value.Offset);
-            query = query.Where(e => OffsetDateTime.Comparer.Instant.Compare(e.TimeStamp, dateUpper.At(LocalTime.Midnight)) < 0);
+            query = query.Where(e => e.DateStamp <= searchModel.To.Value);
         }
 
         var values = await query.ToListAsync();
         return mapper.Map<IEnumerable<WalletModel>>(values);
     }
 
-    public async Task<Tuple<double, double, double, double>> GetAsync(IWalletRepository.GetWallet searchModel) {
+    public async Task<(double total, double currency, double crypt, double metal)> GetAsync(IWalletRepository.GetWallet searchModel)
+    {
         var user = await this.context.UserPreferences.FirstOrDefaultAsync(u => u.UserId == searchModel.UserId);
 
         if (user is null)
@@ -68,12 +69,11 @@ public class WalletRepository : IWalletRepository
         var assets = userAssets.Select(userAsset => this.mapper.Map<UserAssetModel>((userAsset,
             assetValues.FirstOrDefault(val => val.AssetIdentifier == userAsset.AssetIdentifier).Value * userAsset.Value / preferenceCurrencyAsset.Value
         )));
-        
         var all_assets = 0d;
         var currency_assets = 0d;
         var crypto_assets = 0d;
         var metal_assets = 0d;
-        foreach(UserAssetModel asset in assets)
+        foreach (UserAssetModel asset in assets)
         {
             all_assets += asset.UserCurrencyValue;
             if (asset.Asset.Category == "crypto")
@@ -82,9 +82,36 @@ public class WalletRepository : IWalletRepository
                 crypto_assets += asset.UserCurrencyValue;
             if (asset.Asset.Category == "metal")
                 metal_assets += asset.UserCurrencyValue;
-            
-        }
-        return Tuple.Create(all_assets, currency_assets, crypto_assets, metal_assets);
 
+        }
+        return (all_assets, currency_assets, crypto_assets, metal_assets);
+
+    }
+
+    public async Task SyncUserWallets()
+    {
+        var userIds = await this.context.UserPreferences
+                        .Select(user => user.UserId)
+                        .ToListAsync();
+
+        var now = SystemClock.Instance.InUtc().GetCurrentDate();
+
+        foreach (var userId in userIds)
+        {
+            var (total, _, _, _) = await this.GetAsync(new IWalletRepository.GetWallet(userId));
+            var lastWallet = await this.context.Wallets.Where(wallet => wallet.UserIdentifier == userId).OrderBy(a => a.DateStamp).LastOrDefaultAsync();
+            if (lastWallet is not null && now == lastWallet.DateStamp)
+            {
+                lastWallet.Value = total;
+                this.context.Update(lastWallet);
+            }
+            else
+            {
+                var userWallet = new WalletEntity() { Value = total, UserIdentifier = userId, DateStamp = now };
+                this.context.Add(userWallet);
+            }
+        }
+
+        await this.context.SaveChangesAsync();
     }
 }

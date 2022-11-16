@@ -50,7 +50,7 @@ public sealed class APIMappingRegister : IRegister
             .ShallowCopyForSameType(false);
 
         config.NewConfig<WalletModel, WalletDto>()
-            .Map(d => d.TimeStamp, s => s.TimeStamp)
+            .Map(d => d.DateStamp, s => s.DateStamp)
             .Map(d => d.Value, s => s.Value)
             .ShallowCopyForSameType(false);
 

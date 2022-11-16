@@ -8,5 +8,5 @@ public sealed record WalletDto(
     double Value,
     
     [property: JsonProperty(Required = Required.Always)]
-    OffsetDateTime TimeStamp
+    LocalDate DateStamp
 );

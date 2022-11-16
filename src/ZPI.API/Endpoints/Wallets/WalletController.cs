@@ -30,7 +30,7 @@ public class WalletController : ControllerBase
     [Consumes(MediaTypeNames.Application.Json)]
     [ProducesDefaultResponseType]
     [ProducesResponseType(typeof(IEnumerable<WalletDto>), StatusCodes.Status200OK)]
-    public async Task<Object> SearchTransactions(OffsetDate? from, OffsetDate? to)
+    public async Task<Object> SearchTransactions(LocalDate? from, LocalDate? to)
     {
         var id = service.GetCurrentUserId();
         var transactions = await this.repository.SearchAsync(new IWalletRepository.GetWallets(from, to, id));

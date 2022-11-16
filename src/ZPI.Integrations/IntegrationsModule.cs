@@ -16,6 +16,7 @@ public static class IntegrationsModule
     {
         var logger = services.BuildServiceProvider().GetRequiredService<ILogger>();
         services.RegisterServicesInternal(configuration, logger);
+        services.RegisterWorkers();
     }
 
     private static void RegisterServicesInternal(this IServiceCollection services, IConfiguration configuration, Serilog.ILogger logger)
@@ -24,5 +25,10 @@ public static class IntegrationsModule
         services.Configure<ManagementApiOptions>(configuration.GetSection(ManagementApiOptions.ManagementApi));
         services.AddScoped<IAuth0ManagementTokenProvider, Auth0ManagementTokenProvider>();
         services.AddScoped<IUsersRepository, UsersRepository>();
+    }
+
+    private static void RegisterWorkers(this IServiceCollection services)
+    {
+        services.AddHostedService<WorkerService>();
     }
 }

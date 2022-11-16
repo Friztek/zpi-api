@@ -24,10 +24,10 @@ public sealed class PersistanceMappingRegister : IRegister
             .ShallowCopyForSameType(false);
 
         config.NewConfig<WalletEntity, WalletModel>()
-        .Map(d => d.TimeStamp, s => s.TimeStamp)
-        .Map(d => d.Value, s => s.Value)
-        .Map(d => d.UserIdentifier, s => s.UserIdentifier)
-        .ShallowCopyForSameType(false);
+            .Map(d => d.DateStamp, s => s.DateStamp)
+            .Map(d => d.Value, s => s.Value)
+            .Map(d => d.UserIdentifier, s => s.UserIdentifier)
+            .ShallowCopyForSameType(false);
 
         config.NewConfig<AssetValueAtDay, AssetValueModel>()
             .Map(d => d.AssetIdentifier, s => s.AssetIdentifier)
