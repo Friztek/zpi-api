@@ -69,7 +69,6 @@ public class WalletRepository : IWalletRepository
         var assets = userAssets.Select(userAsset => this.mapper.Map<UserAssetModel>((userAsset,
             assetValues.FirstOrDefault(val => val.AssetIdentifier == userAsset.AssetIdentifier).Value * userAsset.Value / preferenceCurrencyAsset.Value
         )));
-
         var all_assets = 0d;
         var currency_assets = 0d;
         var crypto_assets = 0d;
