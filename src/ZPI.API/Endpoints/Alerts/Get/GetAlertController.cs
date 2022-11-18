@@ -1,13 +1,14 @@
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Mime;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 using ZPI.API.DTOs;
 using ZPI.Core.Abstraction.Repositories;
 
@@ -31,19 +32,27 @@ namespace ZPI.API.Endpoints.Alerts.Get
             this.service = service;
         }
 
-        [HttpGet]
-        public async Task<Object> Get()
+        [HttpGet(Name = nameof(GetAllAlerts))]
+        [Produces(MediaTypeNames.Application.Json)]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(typeof(IEnumerable<AlertDto>), StatusCodes.Status200OK)]
+        public async Task<Object> GetAllAlerts()
         {
             var email = service.GetCurrentUserEmail();
             var respone = await client.GetStringAsync(apiUrl + "?email=" + email);
-            var model = JsonConvert.DeserializeObject<List<AlertWithActiveDto>>(respone);
+            var model = JsonConvert.DeserializeObject<List<AlertDto>>(respone);
             return model;
         }
 
-        [HttpPost]
-        public async Task<Object> Post(AlertDto alert)
+        [HttpPost(Name = nameof(AddNewAlert))]
+        [Produces(MediaTypeNames.Application.Json)]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesDefaultResponseType]
+        public async Task<Object> AddNewAlert(CreateAlertDto alert)
         {
-            if (alert.Currency == alert.OriginAssetName) {
+            if (alert.Currency == alert.OriginAssetName)
+            {
                 HttpContext.Response.StatusCode = 400;
                 return "Same target currency and origin asset name";
             }
@@ -63,7 +72,7 @@ namespace ZPI.API.Endpoints.Alerts.Get
             var response = await client.PostAsync(apiUrl, content);
             var contents = await response.Content.ReadAsStringAsync();
             int statusCode = (int)response.StatusCode;
-            var model = JsonConvert.DeserializeObject<AlertWithActiveDto>(contents);
+            var model = JsonConvert.DeserializeObject<AlertDto>(contents);
             HttpContext.Response.StatusCode = statusCode;
             if (statusCode == 200)
                 return model;

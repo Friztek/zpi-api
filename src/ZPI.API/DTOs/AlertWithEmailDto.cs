@@ -1,19 +1,19 @@
 using Newtonsoft.Json;
-namespace ZPI.API.DTOs
-{
+namespace ZPI.API.DTOs;
 
-    public sealed record AlertWithEmailDto {
-    [field: JsonProperty(Required = Required.Always)]
-    public double TargetValue;
+public sealed record AlertWithEmailDto(
+    [property: JsonProperty(Required = Required.Always)]
+    double TargetValue,
+
+    [property: JsonProperty(Required = Required.Always)]
+    string OriginAssetName,
+
+    [property: JsonProperty(Required = Required.Always)]
+    string TargetCurrency,
     
-    [field: JsonProperty(Required = Required.Always)]
-    public string OriginAssetName;
-    [field: JsonProperty(Required = Required.Always)]
-    public string TargetCurrency;
-    [field: JsonProperty(Required = Required.Always)]
-    public string Email;
+    [property: JsonProperty(Required = Required.Always)]
+    string Email,
 
-    [field: JsonProperty(Required = Required.Always)]
-    public double CurrentValue;
-    };
-}
+    [property: JsonProperty(Required = Required.Always)]
+    double CurrentValue
+);
