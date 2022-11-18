@@ -76,9 +76,9 @@ public class WalletRepository : IWalletRepository
         foreach (UserAssetModel asset in assets)
         {
             all_assets += asset.UserCurrencyValue;
-            if (asset.Asset.Category == "crypto")
-                currency_assets += asset.UserCurrencyValue;
             if (asset.Asset.Category == "currency")
+                currency_assets += asset.UserCurrencyValue;
+            if (asset.Asset.Category == "crypto")
                 crypto_assets += asset.UserCurrencyValue;
             if (asset.Asset.Category == "metal")
                 metal_assets += asset.UserCurrencyValue;
