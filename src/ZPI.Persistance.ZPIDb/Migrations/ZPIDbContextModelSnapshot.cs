@@ -317,6 +317,9 @@ namespace ZPI.Persistance.ZPIDb.Migrations
                     b.Property<double>("Value")
                         .HasColumnType("double precision");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
                     b.HasKey("AssetIdentifier", "UserId");
 
                     b.ToTable("UserAssets", "zpi");
