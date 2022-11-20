@@ -22,22 +22,52 @@ public class WalletRepository : IWalletRepository
 
     public async Task<IEnumerable<WalletModel>> SearchAsync(IWalletRepository.GetWallets searchModel)
     {
+
+        var userPreference = await this.context.UserPreferences.FirstOrDefaultAsync(a => a.UserId == searchModel.UserId);
+
+        if (userPreference is null)
+        {
+            throw new Exception("User preference is null");
+        }
+
         var query = context.Wallets
-        .Where(e => e.UserIdentifier == searchModel.UserId)
-        .AsQueryable();
+            .Where(e => e.UserIdentifier == searchModel.UserId)
+            .AsQueryable();
+
+        var currencyQuery = context.AssetValuesAtDay.Where(a => a.AssetIdentifier == "eur").AsQueryable();
 
         if (searchModel.From.HasValue)
         {
             query = query.Where(e => e.DateStamp >= searchModel.From.Value);
-        }
 
+            var value = new OffsetDateTime(searchModel.From.Value.At(LocalTime.Midnight), new Offset());
+            currencyQuery = currencyQuery.Where(e => OffsetDateTime.Comparer.Instant.Compare(e.TimeStamp, value) > 0);
+        }
         if (searchModel.To.HasValue)
         {
+            var value = new OffsetDateTime(searchModel.To.Value.PlusDays(1).At(LocalTime.Midnight), new Offset());
             query = query.Where(e => e.DateStamp <= searchModel.To.Value);
+            currencyQuery = currencyQuery.Where(e => OffsetDateTime.Comparer.Instant.Compare(e.TimeStamp, value) < 0);
         }
 
         var values = await query.ToListAsync();
-        return mapper.Map<IEnumerable<WalletModel>>(values);
+        var currencyAtDay = await currencyQuery.ToListAsync();
+
+        var res = new List<WalletModel>();
+
+        foreach (var walletValue in values)
+        {
+            var preferenceCurrencyAtDay = currencyAtDay.FirstOrDefault(a => a.TimeStamp.Date == walletValue.DateStamp);
+
+            if (preferenceCurrencyAtDay is null)
+            {
+                throw new Exception($"Currency {userPreference.PreferenceCurrency} does not have value at day {walletValue.DateStamp}");
+            }
+
+            res.Add(new WalletModel(searchModel.UserId, walletValue.Value / preferenceCurrencyAtDay.Value, walletValue.DateStamp));
+        }
+
+        return res;
     }
 
     public async Task<(double total, double currency, double crypt, double metal)> GetAsync(IWalletRepository.GetWallet searchModel)
