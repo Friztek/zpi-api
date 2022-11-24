@@ -11,6 +11,6 @@ public interface IUserAssetsRepository :
 {
     public record GetUserAssets(string UserId);
     public record PatchUserAssets(string UserId, IEnumerable<UserAssetTransaction> Assets);
-    public record UserAssetTransaction(string AssetName, double Value, OperationType Type);
-    public record DeleteUserAsset(string UserId, string AssetName);
+    public record UserAssetTransaction(string AssetName, double Value, OperationType Type, string Description);
+    public record DeleteUserAsset(string UserId, string AssetName, string? Description);
 }

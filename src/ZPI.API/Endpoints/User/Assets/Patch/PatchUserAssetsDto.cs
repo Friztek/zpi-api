@@ -10,5 +10,8 @@ public sealed record PatchUserAssetsDto(
     OperationType Type,
 
     [property: JsonProperty(Required = Required.Always)]
-    string AssetName
+    string AssetName,
+
+    [property: JsonProperty(Required = Required.Always)]
+    string Description
 );
