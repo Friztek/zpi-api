@@ -61,7 +61,8 @@ public sealed class ZPIDbContext : DbContext
             );
 
         modelBuilder.Entity<AssetValueEntity>().HasData(
-            new AssetValueEntity {
+            new AssetValueEntity
+            {
                 AssetIdentifier = "usd",
                 Identifier = -1,
                 Value = 1,
@@ -80,7 +81,7 @@ public sealed class ZPIDbContext : DbContext
 
         modelBuilder.Entity<UserAssetEntity>(entity =>
         {
-            entity.HasKey(e => new { e.AssetIdentifier, e.UserId });
+            entity.HasKey(e => new { e.AssetIdentifier, e.UserId, e.Description });
         });
 
         modelBuilder.Entity<AssetValueAtDay>(entity =>

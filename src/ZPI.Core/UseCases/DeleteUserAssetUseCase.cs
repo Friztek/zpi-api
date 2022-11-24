@@ -33,8 +33,9 @@ public sealed class DeleteUserAssetUseCase : IUseCase<DeleteUserAssetUseCase.Inp
 
     public sealed record class Input(
         string UserId,
-        string AssetName
-    ) : IUserAssetsRepository.DeleteUserAsset(UserId, AssetName), IInputPort;
+        string AssetName,
+        string? Description
+    ) : IUserAssetsRepository.DeleteUserAsset(UserId, AssetName, Description), IInputPort;
 
     public interface IOutput : IOutputPort
     {

@@ -20,6 +20,7 @@ public sealed class PersistanceMappingRegister : IRegister
             .Map(d => d.AssetIdentifier, s => s.AssetIdentifier)
             .Map(d => d.TimeStamp, s => s.TimeStamp)
             .Map(d => d.Value, s => s.Value)
+            .Map(d => d.Description, s => s.Description)
             .Map(d => d.UserIdentifier, s => s.UserIdentifier)
             .ShallowCopyForSameType(false);
 

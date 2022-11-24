@@ -12,8 +12,8 @@ using ZPI.Persistance.ZPIDb;
 namespace ZPI.Persistance.ZPIDb.Migrations
 {
     [DbContext(typeof(ZPIDbContext))]
-    [Migration("20221119215454_AddDescriptionToUserAsset")]
-    partial class AddDescriptionToUserAsset
+    [Migration("20221123131311_AddDescriptionColumn")]
+    partial class AddDescriptionColumn
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
