@@ -24,10 +24,10 @@ public sealed class UserAssetsController : UseCaseController<DeleteUserAssetUseC
     [ProducesDefaultResponseType]
     [ProducesResponseType(typeof(IEnumerable<UserAssetDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    public async ValueTask<IActionResult> DeleteUserAsset(string assetName)
+    public async ValueTask<IActionResult> DeleteUserAsset(string assetName, string? description)
     {
         var userId = service.GetCurrentUserId();
-        await useCase.Execute(new DeleteUserAssetUseCase.Input(userId, assetName), presenter);
+        await useCase.Execute(new DeleteUserAssetUseCase.Input(userId, assetName, description), presenter);
         return await presenter.GetResultAsync();
     }
 }

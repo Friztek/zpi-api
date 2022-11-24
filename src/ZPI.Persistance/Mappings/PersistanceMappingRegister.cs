@@ -20,6 +20,7 @@ public sealed class PersistanceMappingRegister : IRegister
             .Map(d => d.AssetIdentifier, s => s.AssetIdentifier)
             .Map(d => d.TimeStamp, s => s.TimeStamp)
             .Map(d => d.Value, s => s.Value)
+            .Map(d => d.Description, s => s.Description)
             .Map(d => d.UserIdentifier, s => s.UserIdentifier)
             .ShallowCopyForSameType(false);
 
@@ -63,6 +64,7 @@ public sealed class PersistanceMappingRegister : IRegister
             .Map(d => d.Asset, s => s.entity.Asset)
             .Map(d => d.OriginValue, s => s.entity.Value)
             .Map(d => d.UserCurrencyValue, s => s.ValueInUserCurrency)
+            .Map(d => d.Description, s => s.entity.Description)
             .ShallowCopyForSameType(false);
 
         config.NewConfig<IUserPreferencesRepository.UpdateUserPreferences, UserPreferencesEntity>()

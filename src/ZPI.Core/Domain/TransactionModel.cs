@@ -5,6 +5,7 @@ namespace ZPI.Core.Domain
         string UserIdentifier,
         string AssetIdentifier,
         double Value,
-        OffsetDateTime TimeStamp
+        OffsetDateTime TimeStamp,
+        string Description
     );
 }

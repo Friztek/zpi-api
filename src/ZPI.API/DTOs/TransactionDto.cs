@@ -11,5 +11,8 @@ public sealed record TransactionDto(
     double Value,
     
     [property: JsonProperty(Required = Required.Always)]
-    OffsetDateTime TimeStamp
+    OffsetDateTime TimeStamp,
+
+    [property: JsonProperty(Required = Required.Always)]
+    string Description
 );
