@@ -50,4 +50,14 @@ public class UsersRepository : IUsersRepository
 
         return new UserModel(res.FullName, res.Email);
     }
+
+
+    public async Task<IEnumerable<UserModel>> GetAll()
+    {
+        var getUsersRequest = new GetUsersRequest();
+        var paginationInfo = new PaginationInfo(0, 100);
+        var res = await this.managementApiClient.Users.GetAllAsync(getUsersRequest, paginationInfo);
+
+        return res.Select(user => new UserModel(user.FullName, user.Email));
+    }
 }

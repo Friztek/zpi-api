@@ -48,19 +48,28 @@ public class UserAssetsRepository : IUserAssetsRepository
             throw new UserNotFoundException(UserNotFoundException.GenerateBaseMessage(deleteModel.UserId));
         }
 
-        var userAsset = await this.context.UserAssets.FirstOrDefaultAsync(ua => ua.UserId == deleteModel.UserId && ua.AssetIdentifier == deleteModel.AssetName);
+        var userAssetQuery = this.context.UserAssets.Where(ua => ua.UserId == deleteModel.UserId && ua.AssetIdentifier == deleteModel.AssetName);
+
+        if (deleteModel.Description is not null)
+        {
+            userAssetQuery = userAssetQuery.Where(ua => ua.Description == deleteModel.Description);
+        }
 
 
-        var transaction = new TransactionEntity()
+        var userAssetToDelete = await userAssetQuery.ToListAsync();
+
+
+        var transactions = userAssetToDelete.Select(ua => new TransactionEntity()
         {
             AssetIdentifier = deleteModel.AssetName,
             UserIdentifier = deleteModel.UserId,
-            Value = -userAsset.Value
-        };
+            Value = -ua.Value,
+            Description = ua.Description
+        });
 
-        AddTransaction(transaction);
+        AddTransactionsRange(transactions);
 
-        this.context.UserAssets.Remove(userAsset);
+        this.context.UserAssets.RemoveRange(userAssetToDelete);
 
         await this.context.SaveChangesAsync();
     }
@@ -99,6 +108,8 @@ public class UserAssetsRepository : IUserAssetsRepository
 
     public async Task<IEnumerable<UserAssetModel>> UpdateAsync(IUserAssetsRepository.PatchUserAssets updateModel)
     {
+        var upsertedUserAssets = new List<UserAssetEntity>();
+
         var user = await this.context.UserPreferences.FirstOrDefaultAsync(u => u.UserId == updateModel.UserId);
         var transactions = new List<TransactionEntity>();
 
@@ -107,69 +118,68 @@ public class UserAssetsRepository : IUserAssetsRepository
             throw new UserNotFoundException(UserNotFoundException.GenerateBaseMessage(updateModel.UserId));
         }
 
-        var assetsIdsToUpdate = updateModel.Assets.Select(a => a.AssetName);
-
-        var userAssetsToUpdate = await this.context.UserAssets
-            .Include(ua => ua.Asset)
-            .Where(u => u.UserId == updateModel.UserId)
-            .Where(ua => assetsIdsToUpdate
-                .Contains(ua.AssetIdentifier))
-            .ToListAsync();
-
-        foreach (var assetToUpdate in userAssetsToUpdate)
+        foreach (var userAssetPatch in updateModel.Assets)
         {
-            var command = updateModel.Assets.First(a => a.AssetName == assetToUpdate.AssetIdentifier);
+            var userAssetToUpdate = await this.context.UserAssets
+                    .Include(ua => ua.Asset)
+                    .Where(u => u.UserId == updateModel.UserId)
+                    .Where(ua => ua.Description == userAssetPatch.Description)
+                    .Where(ua => ua.Asset.Identifier == userAssetPatch.AssetName)
+                    .FirstOrDefaultAsync();
 
-            switch (command.Type)
+            if (userAssetToUpdate is UserAssetEntity userAsset)
             {
-                case OperationType.Update:
-                    assetToUpdate.Value += command.Value;
-                    break;
-                case OperationType.Set:
-                    assetToUpdate.Value = command.Value;
-                    break;
+                switch (userAssetPatch.Type)
+                {
+                    case OperationType.Update:
+                        userAsset.Value += userAssetPatch.Value;
+                        break;
+                    case OperationType.Set:
+                        userAsset.Value = userAssetPatch.Value;
+                        break;
+                }
+
+                transactions.Add(new TransactionEntity()
+                {
+                    AssetIdentifier = userAssetPatch.AssetName,
+                    UserIdentifier = updateModel.UserId,
+                    Value = userAssetPatch.Type == OperationType.Update ? userAssetPatch.Value : userAssetPatch.Value - userAssetToUpdate.Value,
+                    Description = userAssetPatch.Description
+                });
+
+                upsertedUserAssets.Add(userAsset);
+
             }
-
-            transactions.Add(new TransactionEntity()
+            else
             {
-                AssetIdentifier = assetToUpdate.AssetIdentifier,
-                UserIdentifier = updateModel.UserId,
-                Value = command.Type == OperationType.Update ? command.Value : command.Value - assetToUpdate.Value
+                var asset = await this.context.Assets.FirstOrDefaultAsync(a => a.Identifier == userAssetPatch.AssetName);
+
+                if (asset is null)
+                {
+                    throw new AssetNotFoundException(AssetNotFoundException.GenerateBaseMessage(userAssetPatch.AssetName));
+                }
+
+                var newAsset = new UserAssetEntity()
+                {
+                    Asset = asset,
+                    AssetIdentifier = asset.Identifier,
+                    UserId = updateModel.UserId,
+                    Value = userAssetPatch.Value,
+                    Description = userAssetPatch.Description
+                };
+
+                transactions.Add(new TransactionEntity()
+                {
+                    AssetIdentifier = userAssetPatch.AssetName,
+                    UserIdentifier = updateModel.UserId,
+                    Value = userAssetPatch.Value,
+                    Description = userAssetPatch.Description
+                });
+
+                this.context.Add(newAsset);
+
+                upsertedUserAssets.Add(newAsset);
             }
-
-        );
-        }
-
-        var existingAssets = userAssetsToUpdate.Select(ua => ua.AssetIdentifier);
-
-        var userAssetToCreate = updateModel.Assets.Where(asset => !existingAssets.Contains(asset.AssetName)).ToList();
-
-        foreach (var assetToCreate in userAssetToCreate)
-        {
-            var asset = await this.context.Assets.FirstOrDefaultAsync(a => a.Identifier == assetToCreate.AssetName);
-
-            if (asset is null)
-            {
-                throw new AssetNotFoundException(AssetNotFoundException.GenerateBaseMessage(assetToCreate.AssetName));
-            }
-
-            var newAsset = new UserAssetEntity()
-            {
-                Asset = asset,
-                AssetIdentifier = asset.Identifier,
-                UserId = updateModel.UserId,
-                Value = assetToCreate.Value
-            };
-
-            transactions.Add(new TransactionEntity()
-            {
-                AssetIdentifier = assetToCreate.AssetName,
-                UserIdentifier = updateModel.UserId,
-                Value = assetToCreate.Value
-            });
-
-            this.context.UserAssets.Add(newAsset);
-            userAssetsToUpdate.Add(newAsset);
         }
 
         AddTransactionsRange(transactions);
@@ -179,7 +189,7 @@ public class UserAssetsRepository : IUserAssetsRepository
         var preferenceCurrency = assetValues.FirstOrDefault(a => a.AssetIdentifier == user.PreferenceCurrency);
 
 
-        return userAssetsToUpdate.Select(asset => this.mapper.Map<UserAssetModel>((
+        return upsertedUserAssets.Select(asset => this.mapper.Map<UserAssetModel>((
             asset,
             assetValues.FirstOrDefault(val => val.AssetIdentifier == asset.AssetIdentifier).Value * asset.Value / preferenceCurrency.Value
             )));

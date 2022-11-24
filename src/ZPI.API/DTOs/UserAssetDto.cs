@@ -10,5 +10,8 @@ public sealed record UserAssetDto(
     double OriginValue,
 
     [property: JsonProperty(Required = Required.Always)]
-    double UserCurrencyValue
+    double UserCurrencyValue,
+
+    [property: JsonProperty(Required = Required.Always)]
+    string Description
 );
