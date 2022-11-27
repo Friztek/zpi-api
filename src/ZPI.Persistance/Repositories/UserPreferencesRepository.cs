@@ -25,7 +25,8 @@ public class UserPreferencesRepository : IUserPreferencesRepository
             AlertsOnEmail = false,
             PreferenceCurrency = "usd",
             UserId = createModel.UserId,
-            WeeklyReports = false
+            WeeklyReports = false,
+            IsDefault = true
         };
 
         var entry = await this.context.AddAsync(user);
@@ -56,6 +57,8 @@ public class UserPreferencesRepository : IUserPreferencesRepository
         }
 
         mapper.Map(updateModel, userPreferences);
+
+        userPreferences.IsDefault = false;
 
         await this.context.SaveChangesAsync();
 
