@@ -13,12 +13,12 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { TransactionType } from './TransactionType';
+import type { OperationType } from './OperationType';
 import {
-    TransactionTypeFromJSON,
-    TransactionTypeFromJSONTyped,
-    TransactionTypeToJSON,
-} from './TransactionType';
+    OperationTypeFromJSON,
+    OperationTypeFromJSONTyped,
+    OperationTypeToJSON,
+} from './OperationType';
 
 /**
  * 
@@ -34,16 +34,22 @@ export interface PatchUserAssetsDto {
     value: number;
     /**
      * 
-     * @type {TransactionType}
+     * @type {OperationType}
      * @memberof PatchUserAssetsDto
      */
-    type: TransactionType;
+    type: OperationType;
     /**
      * 
      * @type {string}
      * @memberof PatchUserAssetsDto
      */
     assetName: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchUserAssetsDto
+     */
+    description: string;
 }
 
 /**
@@ -54,6 +60,7 @@ export function instanceOfPatchUserAssetsDto(value: object): boolean {
     isInstance = isInstance && "value" in value;
     isInstance = isInstance && "type" in value;
     isInstance = isInstance && "assetName" in value;
+    isInstance = isInstance && "description" in value;
 
     return isInstance;
 }
@@ -69,8 +76,9 @@ export function PatchUserAssetsDtoFromJSONTyped(json: any, ignoreDiscriminator: 
     return {
         
         'value': json['value'],
-        'type': TransactionTypeFromJSON(json['type']),
+        'type': OperationTypeFromJSON(json['type']),
         'assetName': json['assetName'],
+        'description': json['description'],
     };
 }
 
@@ -84,8 +92,9 @@ export function PatchUserAssetsDtoToJSON(value?: PatchUserAssetsDto | null): any
     return {
         
         'value': value.value,
-        'type': TransactionTypeToJSON(value.type),
+        'type': OperationTypeToJSON(value.type),
         'assetName': value.assetName,
+        'description': value.description,
     };
 }
 

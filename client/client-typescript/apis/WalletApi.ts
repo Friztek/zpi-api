@@ -15,43 +15,43 @@
 
 import * as runtime from '../runtime';
 import type {
-  AddUserDto,
-  PatchUser,
+  FullWalletDto,
   ProblemDetails,
-  UserPreferencesDto,
+  WalletDto,
 } from '../models';
 import {
-    AddUserDtoFromJSON,
-    AddUserDtoToJSON,
-    PatchUserFromJSON,
-    PatchUserToJSON,
+    FullWalletDtoFromJSON,
+    FullWalletDtoToJSON,
     ProblemDetailsFromJSON,
     ProblemDetailsToJSON,
-    UserPreferencesDtoFromJSON,
-    UserPreferencesDtoToJSON,
+    WalletDtoFromJSON,
+    WalletDtoToJSON,
 } from '../models';
 
-export interface AddUserRequest {
-    addUserDto?: AddUserDto;
-}
-
-export interface PatchUserInfoRequest {
-    patchUser?: PatchUser;
+export interface ApiWalletGetRequest {
+    from?: Date;
+    to?: Date;
 }
 
 /**
  * 
  */
-export class UsersApi extends runtime.BaseAPI {
+export class WalletApi extends runtime.BaseAPI {
 
     /**
      */
-    async addUserRaw(requestParameters: AddUserRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async apiWalletGetRaw(requestParameters: ApiWalletGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<WalletDto>>> {
         const queryParameters: any = {};
 
-        const headerParameters: runtime.HTTPHeaders = {};
+        if (requestParameters.from !== undefined) {
+            queryParameters['from'] = (requestParameters.from as any).toISOString().substr(0,10);
+        }
 
-        headerParameters['Content-Type'] = 'application/json';
+        if (requestParameters.to !== undefined) {
+            queryParameters['to'] = (requestParameters.to as any).toISOString().substr(0,10);
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
 
         if (this.configuration && this.configuration.accessToken) {
             const token = this.configuration.accessToken;
@@ -62,30 +62,28 @@ export class UsersApi extends runtime.BaseAPI {
             }
         }
         const response = await this.request({
-            path: `/api/users`,
-            method: 'POST',
+            path: `/api/wallet`,
+            method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-            body: AddUserDtoToJSON(requestParameters.addUserDto),
         }, initOverrides);
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(WalletDtoFromJSON));
     }
 
     /**
      */
-    async addUser(requestParameters: AddUserRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.addUserRaw(requestParameters, initOverrides);
+    async apiWalletGet(requestParameters: ApiWalletGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<WalletDto>> {
+        const response = await this.apiWalletGetRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
     /**
      */
-    async patchUserInfoRaw(requestParameters: PatchUserInfoRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UserPreferencesDto>> {
+    async apiWalletTotalGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<FullWalletDto>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
 
         if (this.configuration && this.configuration.accessToken) {
             const token = this.configuration.accessToken;
@@ -96,20 +94,19 @@ export class UsersApi extends runtime.BaseAPI {
             }
         }
         const response = await this.request({
-            path: `/api/users/me`,
-            method: 'PATCH',
+            path: `/api/wallet/total`,
+            method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchUserToJSON(requestParameters.patchUser),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => UserPreferencesDtoFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => FullWalletDtoFromJSON(jsonValue));
     }
 
     /**
      */
-    async patchUserInfo(requestParameters: PatchUserInfoRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserPreferencesDto> {
-        const response = await this.patchUserInfoRaw(requestParameters, initOverrides);
+    async apiWalletTotalGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<FullWalletDto> {
+        const response = await this.apiWalletTotalGetRaw(initOverrides);
         return await response.value();
     }
 
