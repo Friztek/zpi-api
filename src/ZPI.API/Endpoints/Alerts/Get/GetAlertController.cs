@@ -25,10 +25,13 @@ namespace ZPI.API.Endpoints.Alerts.Get
 
         private readonly IUserInfoService service;
 
-        public AlertController(IAssetValuesRepository repository, IUserInfoService service)
+        private readonly IUserPreferencesRepository userRepository;
+
+        public AlertController(IAssetValuesRepository repository, IUserInfoService service, IUserPreferencesRepository userRepository)
         {
             this.repository = repository;
             this.service = service;
+            this.userRepository = userRepository;
         }
 
         [HttpGet]
@@ -48,6 +51,8 @@ namespace ZPI.API.Endpoints.Alerts.Get
                 return "Same target currency and origin asset name";
             }
             var email = service.GetCurrentUserEmail();
+            var userId = service.GetCurrentUserId();
+            var userPreference = await this.userRepository.GetAsync(new IUserPreferencesRepository.GetUserPreferences(userId));
             var asset_name = alert.OriginAssetName;
             var asset = await this.repository.GetAsync(new IAssetValuesRepository.GetAssetValue(asset_name));
             AlertWithEmailDto alertWithEmail = new AlertWithEmailDto
@@ -56,7 +61,8 @@ namespace ZPI.API.Endpoints.Alerts.Get
                 Email = email,
                 OriginAssetName = alert.OriginAssetName,
                 TargetCurrency = alert.Currency,
-                CurrentValue = asset.Value
+                CurrentValue = asset.Value,
+                OnEmail = userPreference.AlertsOnEmail
             };
             var json = JsonConvert.SerializeObject(alertWithEmail);
             var content = new StringContent(json.ToString(), Encoding.UTF8, "application/json");
