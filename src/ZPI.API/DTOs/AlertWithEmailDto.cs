@@ -15,5 +15,8 @@ namespace ZPI.API.DTOs
 
     [field: JsonProperty(Required = Required.Always)]
     public double CurrentValue;
+
+    [field: JsonProperty(Required = Required.Always)]
+    public bool OnEmail;
     };
 }
