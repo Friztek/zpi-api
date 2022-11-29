@@ -30,6 +30,7 @@ import {
 
 export interface DeleteUserAssetRequest {
     assetName: string;
+    description?: string;
 }
 
 export interface PatchUserAssetsRequest {
@@ -49,6 +50,10 @@ export class UserAssetsApi extends runtime.BaseAPI {
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters.description !== undefined) {
+            queryParameters['description'] = requestParameters.description;
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 

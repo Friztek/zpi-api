@@ -20,6 +20,7 @@ public sealed class APIMappingRegister : IRegister
             .Map(d => d.AlertsOnEmail, s => s.AlertsOnEmail)
             .Map(d => d.PreferenceCurrency, s => s.PreferenceCurrency)
             .Map(d => d.WeeklyReports, s => s.WeeklyReports)
+            .Map(d => d.IsDefault, s => false)
             .ShallowCopyForSameType(false);
 
         config.NewConfig<UserAssetModel, UserAssetDto>()

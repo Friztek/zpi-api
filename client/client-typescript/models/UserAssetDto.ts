@@ -44,6 +44,12 @@ export interface UserAssetDto {
      * @memberof UserAssetDto
      */
     userCurrencyValue: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserAssetDto
+     */
+    description: string;
 }
 
 /**
@@ -54,6 +60,7 @@ export function instanceOfUserAssetDto(value: object): boolean {
     isInstance = isInstance && "asset" in value;
     isInstance = isInstance && "originValue" in value;
     isInstance = isInstance && "userCurrencyValue" in value;
+    isInstance = isInstance && "description" in value;
 
     return isInstance;
 }
@@ -71,6 +78,7 @@ export function UserAssetDtoFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'asset': AssetDtoFromJSON(json['asset']),
         'originValue': json['originValue'],
         'userCurrencyValue': json['userCurrencyValue'],
+        'description': json['description'],
     };
 }
 
@@ -86,6 +94,7 @@ export function UserAssetDtoToJSON(value?: UserAssetDto | null): any {
         'asset': AssetDtoToJSON(value.asset),
         'originValue': value.originValue,
         'userCurrencyValue': value.userCurrencyValue,
+        'description': value.description,
     };
 }
 

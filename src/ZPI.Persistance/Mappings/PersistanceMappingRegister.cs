@@ -58,6 +58,7 @@ public sealed class PersistanceMappingRegister : IRegister
             .Map(d => d.AlertsOnEmail, s => s.AlertsOnEmail)
             .Map(d => d.PreferenceCurrency, s => s.PreferenceCurrency)
             .Map(d => d.WeeklyReports, s => s.WeeklyReports)
+            .Map(d => d.IsDefault, s => s.IsDefault)
             .ShallowCopyForSameType(false);
 
         config.NewConfig<(UserAssetEntity entity, double ValueInUserCurrency), UserAssetModel>()
@@ -71,6 +72,7 @@ public sealed class PersistanceMappingRegister : IRegister
             .Map(d => d.AlertsOnEmail, s => s.UpdateModel.AlertsOnEmail)
             .Map(d => d.PreferenceCurrency, s => s.UpdateModel.PreferenceCurrency)
             .Map(d => d.WeeklyReports, s => s.UpdateModel.WeeklyReports)
+            .Ignore(d => d.IsDefault)
             .ShallowCopyForSameType(false);
 
         config.NewConfig<IAssetValuesRepository.AddAssetValue, AssetValueEntity>()

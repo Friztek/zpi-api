@@ -37,6 +37,12 @@ export interface UserPreferencesDto {
      * @memberof UserPreferencesDto
      */
     alertsOnEmail: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UserPreferencesDto
+     */
+    isDefault: boolean;
 }
 
 /**
@@ -47,6 +53,7 @@ export function instanceOfUserPreferencesDto(value: object): boolean {
     isInstance = isInstance && "preferenceCurrency" in value;
     isInstance = isInstance && "weeklyReports" in value;
     isInstance = isInstance && "alertsOnEmail" in value;
+    isInstance = isInstance && "isDefault" in value;
 
     return isInstance;
 }
@@ -64,6 +71,7 @@ export function UserPreferencesDtoFromJSONTyped(json: any, ignoreDiscriminator: 
         'preferenceCurrency': json['preferenceCurrency'],
         'weeklyReports': json['weeklyReports'],
         'alertsOnEmail': json['alertsOnEmail'],
+        'isDefault': json['isDefault'],
     };
 }
 
@@ -79,6 +87,7 @@ export function UserPreferencesDtoToJSON(value?: UserPreferencesDto | null): any
         'preferenceCurrency': value.preferenceCurrency,
         'weeklyReports': value.weeklyReports,
         'alertsOnEmail': value.alertsOnEmail,
+        'isDefault': value.isDefault,
     };
 }
 

@@ -13,3 +13,6 @@ This service relies on:
 dotnet ef migrations add <<migration-name>> --project .\src\ZPI.Persistance.ZPIDb\ZPI.Persistance.ZPIDb.csproj --context ZPIDbContext --startup-project .\src\ZPI\ZPI.csproj
 ```
 
+```
+npx @openapitools/openapi-generator-cli generate -i ./swagger.json -o ./client-typescript -g typescript-fetch
+```
