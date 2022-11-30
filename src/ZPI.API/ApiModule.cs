@@ -11,6 +11,7 @@ using ZPI.API.Endpoints.AssetValues.Search;
 using ZPI.API.Endpoints.User.Assets.Delete;
 using ZPI.API.Endpoints.User.Assets.Get;
 using ZPI.API.Endpoints.User.Assets.Patch;
+using ZPI.API.Endpoints.User.Password.Reset;
 using ZPI.API.Endpoints.User.Preferences.Get;
 using ZPI.API.Endpoints.User.Preferences.Update;
 using ZPI.API.Endpoints.Users.Add;
@@ -86,6 +87,7 @@ public static class ApiModule
         services.AddScoped<PatchUserAssetsPresenter>();
         services.AddScoped<AddUserPresenter>();
         services.AddScoped<PatchUserPresenter>();
+        services.AddScoped<ResetUserPasswordPresenter>();
     }
 
 
