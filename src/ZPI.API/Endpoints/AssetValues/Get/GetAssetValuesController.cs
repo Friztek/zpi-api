@@ -8,24 +8,24 @@ using ZPI.Core.UseCases;
 
 namespace ZPI.API.Endpoints.AssetValues.Get
 {
-[AllowAnonymous]
-[ApiController]
-[Route("api/asset-values")]
-public sealed class GetAssetValuesController : UseCaseController<GetAssetValuesUseCase, GetAssetValuesPresenter>
-{
-    public GetAssetValuesController(ILogger logger, GetAssetValuesUseCase useCase, GetAssetValuesPresenter presenter)
-        : base(logger, useCase, presenter)
-    { }
-
-    [HttpGet]
-    [Produces(MediaTypeNames.Application.Json)]
-    [Consumes(MediaTypeNames.Application.Json)]
-    [ProducesDefaultResponseType]
-    [ProducesResponseType(typeof(IEnumerable<AssetValueDto>), StatusCodes.Status200OK)]
-    public async ValueTask<IActionResult> SearchAssetValuesHistory()
+    [AllowAnonymous]
+    [ApiController]
+    [Route("api/asset-values")]
+    public sealed class AssetValuesController : UseCaseController<GetAssetValuesUseCase, GetAssetValuesPresenter>
     {
-        await useCase.Execute(new GetAssetValuesUseCase.Input(), presenter);
-        return await presenter.GetResultAsync();
+        public AssetValuesController(ILogger logger, GetAssetValuesUseCase useCase, GetAssetValuesPresenter presenter)
+            : base(logger, useCase, presenter)
+        { }
+
+        [HttpGet]
+        [Produces(MediaTypeNames.Application.Json)]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(typeof(IEnumerable<AssetValueDto>), StatusCodes.Status200OK)]
+        public async ValueTask<IActionResult> GetAllValuesHistory()
+        {
+            await useCase.Execute(new GetAssetValuesUseCase.Input(), presenter);
+            return await presenter.GetResultAsync();
+        }
     }
-}
 }

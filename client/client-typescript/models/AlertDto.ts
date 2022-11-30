@@ -24,19 +24,37 @@ export interface AlertDto {
      * @type {number}
      * @memberof AlertDto
      */
-    value: number;
+    alertId?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof AlertDto
+     */
+    value?: number;
     /**
      * 
      * @type {string}
      * @memberof AlertDto
      */
-    originAssetName: string;
+    originAssetName?: string;
     /**
      * 
      * @type {string}
      * @memberof AlertDto
      */
-    currency: string;
+    currency?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof AlertDto
+     */
+    active?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof AlertDto
+     */
+    originAssetType?: string;
 }
 
 /**
@@ -44,9 +62,6 @@ export interface AlertDto {
  */
 export function instanceOfAlertDto(value: object): boolean {
     let isInstance = true;
-    isInstance = isInstance && "value" in value;
-    isInstance = isInstance && "originAssetName" in value;
-    isInstance = isInstance && "currency" in value;
 
     return isInstance;
 }
@@ -61,9 +76,12 @@ export function AlertDtoFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
     }
     return {
         
-        'value': json['value'],
-        'originAssetName': json['originAssetName'],
-        'currency': json['currency'],
+        'alertId': !exists(json, 'alertId') ? undefined : json['alertId'],
+        'value': !exists(json, 'value') ? undefined : json['value'],
+        'originAssetName': !exists(json, 'originAssetName') ? undefined : json['originAssetName'],
+        'currency': !exists(json, 'currency') ? undefined : json['currency'],
+        'active': !exists(json, 'active') ? undefined : json['active'],
+        'originAssetType': !exists(json, 'originAssetType') ? undefined : json['originAssetType'],
     };
 }
 
@@ -76,9 +94,12 @@ export function AlertDtoToJSON(value?: AlertDto | null): any {
     }
     return {
         
+        'alertId': value.alertId,
         'value': value.value,
         'originAssetName': value.originAssetName,
         'currency': value.currency,
+        'active': value.active,
+        'originAssetType': value.originAssetType,
     };
 }
 
