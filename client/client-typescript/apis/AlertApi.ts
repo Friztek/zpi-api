@@ -15,19 +15,25 @@
 
 import * as runtime from '../runtime';
 import type {
+  AddAlertDto,
   AlertDto,
+  ProblemDetails,
 } from '../models';
 import {
+    AddAlertDtoFromJSON,
+    AddAlertDtoToJSON,
     AlertDtoFromJSON,
     AlertDtoToJSON,
+    ProblemDetailsFromJSON,
+    ProblemDetailsToJSON,
 } from '../models';
 
-export interface ApiAlertsIdDeleteRequest {
-    id: number;
+export interface AddNewAllertRequest {
+    addAlertDto?: AddAlertDto;
 }
 
-export interface ApiAlertsPostRequest {
-    alertDto?: AlertDto;
+export interface DeleteAlertRequest {
+    id: number;
 }
 
 /**
@@ -37,10 +43,12 @@ export class AlertApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiAlertsGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async addNewAllertRaw(requestParameters: AddNewAllertRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AlertDto>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
 
         if (this.configuration && this.configuration.accessToken) {
             const token = this.configuration.accessToken;
@@ -52,25 +60,27 @@ export class AlertApi extends runtime.BaseAPI {
         }
         const response = await this.request({
             path: `/api/alerts`,
-            method: 'GET',
+            method: 'POST',
             headers: headerParameters,
             query: queryParameters,
+            body: AddAlertDtoToJSON(requestParameters.addAlertDto),
         }, initOverrides);
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => AlertDtoFromJSON(jsonValue));
     }
 
     /**
      */
-    async apiAlertsGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.apiAlertsGetRaw(initOverrides);
+    async addNewAllert(requestParameters: AddNewAllertRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AlertDto> {
+        const response = await this.addNewAllertRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
     /**
      */
-    async apiAlertsIdDeleteRaw(requestParameters: ApiAlertsIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async deleteAlertRaw(requestParameters: DeleteAlertRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<boolean>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling apiAlertsIdDelete.');
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling deleteAlert.');
         }
 
         const queryParameters: any = {};
@@ -92,23 +102,22 @@ export class AlertApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.TextApiResponse(response) as any;
     }
 
     /**
      */
-    async apiAlertsIdDelete(requestParameters: ApiAlertsIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.apiAlertsIdDeleteRaw(requestParameters, initOverrides);
+    async deleteAlert(requestParameters: DeleteAlertRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<boolean> {
+        const response = await this.deleteAlertRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
     /**
      */
-    async apiAlertsPostRaw(requestParameters: ApiAlertsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async getAllAllertsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<AlertDto>>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json-patch+json';
 
         if (this.configuration && this.configuration.accessToken) {
             const token = this.configuration.accessToken;
@@ -120,19 +129,19 @@ export class AlertApi extends runtime.BaseAPI {
         }
         const response = await this.request({
             path: `/api/alerts`,
-            method: 'POST',
+            method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-            body: AlertDtoToJSON(requestParameters.alertDto),
         }, initOverrides);
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(AlertDtoFromJSON));
     }
 
     /**
      */
-    async apiAlertsPost(requestParameters: ApiAlertsPostRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.apiAlertsPostRaw(requestParameters, initOverrides);
+    async getAllAllerts(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<AlertDto>> {
+        const response = await this.getAllAllertsRaw(initOverrides);
+        return await response.value();
     }
 
 }

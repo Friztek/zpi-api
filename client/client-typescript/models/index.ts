@@ -1,5 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
+export * from './AddAlertDto';
 export * from './AddAssetValueDto';
 export * from './AddUserDto';
 export * from './AlertDto';

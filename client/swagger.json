@@ -7,55 +7,74 @@
   "paths": {
     "/api/alerts": {
       "get": {
-        "tags": [
-          "Alert"
-        ],
+        "tags": ["Alert"],
+        "operationId": "GetAllAllerts",
         "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AlertDto"
+                  }
+                }
+              }
+            }
           }
         }
       },
       "post": {
-        "tags": [
-          "Alert"
-        ],
+        "tags": ["Alert"],
+        "operationId": "AddNewAllert",
         "requestBody": {
           "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "$ref": "#/components/schemas/AlertDto"
-              }
-            },
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AlertDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AlertDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/AlertDto"
+                "$ref": "#/components/schemas/AddAlertDto"
               }
             }
           }
         },
         "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlertDto"
+                }
+              }
+            }
           }
         }
       }
     },
     "/api/alerts/{id}": {
       "delete": {
-        "tags": [
-          "Alert"
-        ],
+        "tags": ["Alert"],
+        "operationId": "DeleteAlert",
         "parameters": [
           {
             "name": "id",
@@ -68,17 +87,32 @@
           }
         ],
         "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
           }
         }
       }
     },
     "/api/assets": {
       "get": {
-        "tags": [
-          "Assets"
-        ],
+        "tags": ["Assets"],
         "operationId": "GetAllAssets",
         "responses": {
           "default": {
@@ -109,9 +143,7 @@
     },
     "/api/asset-values/{assetName}": {
       "get": {
-        "tags": [
-          "AssetValues"
-        ],
+        "tags": ["AssetValues"],
         "operationId": "SearchAssetValuesHistory",
         "parameters": [
           {
@@ -164,11 +196,39 @@
         }
       }
     },
+    "/api/asset-values": {
+      "get": {
+        "tags": ["AssetValues"],
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AssetValueDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/asset-values/{assetIdentifier}": {
       "post": {
-        "tags": [
-          "AssetValues"
-        ],
+        "tags": ["AssetValues"],
         "operationId": "PatchAssetValue",
         "parameters": [
           {
@@ -206,43 +266,9 @@
         }
       }
     },
-    "/api/asset-values": {
-      "get": {
-        "tags": [
-          "GetAssetValues"
-        ],
-        "responses": {
-          "default": {
-            "description": "Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AssetValueDto"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/transactions": {
       "get": {
-        "tags": [
-          "Transaction"
-        ],
+        "tags": ["Transaction"],
         "parameters": [
           {
             "name": "from",
@@ -288,9 +314,7 @@
     },
     "/api/users/me/assets": {
       "get": {
-        "tags": [
-          "UserAssets"
-        ],
+        "tags": ["UserAssets"],
         "operationId": "GetAllUserAssets",
         "responses": {
           "default": {
@@ -329,9 +353,7 @@
         }
       },
       "patch": {
-        "tags": [
-          "UserAssets"
-        ],
+        "tags": ["UserAssets"],
         "operationId": "PatchUserAssets",
         "requestBody": {
           "content": {
@@ -384,9 +406,7 @@
     },
     "/api/users/me/assets/{assetName}": {
       "delete": {
-        "tags": [
-          "UserAssets"
-        ],
+        "tags": ["UserAssets"],
         "operationId": "DeleteUserAsset",
         "parameters": [
           {
@@ -444,9 +464,7 @@
     },
     "/api/users/me/preferences": {
       "put": {
-        "tags": [
-          "UserPreferences"
-        ],
+        "tags": ["UserPreferences"],
         "operationId": "UpdateUserPreferences",
         "requestBody": {
           "content": {
@@ -491,9 +509,7 @@
         }
       },
       "get": {
-        "tags": [
-          "UserPreferences"
-        ],
+        "tags": ["UserPreferences"],
         "operationId": "GetUserPreferences",
         "responses": {
           "default": {
@@ -531,9 +547,7 @@
     },
     "/api/users/me": {
       "patch": {
-        "tags": [
-          "Users"
-        ],
+        "tags": ["Users"],
         "operationId": "PatchUserInfo",
         "requestBody": {
           "content": {
@@ -580,9 +594,7 @@
     },
     "/api/users": {
       "post": {
-        "tags": [
-          "Users"
-        ],
+        "tags": ["Users"],
         "operationId": "AddUser",
         "requestBody": {
           "content": {
@@ -612,9 +624,7 @@
     },
     "/api/wallet": {
       "get": {
-        "tags": [
-          "Wallet"
-        ],
+        "tags": ["Wallet"],
         "parameters": [
           {
             "name": "from",
@@ -662,9 +672,7 @@
     },
     "/api/wallet/total": {
       "get": {
-        "tags": [
-          "Wallet"
-        ],
+        "tags": ["Wallet"],
         "responses": {
           "default": {
             "description": "Error",
@@ -692,43 +700,8 @@
   },
   "components": {
     "schemas": {
-      "AddAssetValueDto": {
-        "required": [
-          "timeStamp",
-          "value"
-        ],
-        "type": "object",
-        "properties": {
-          "value": {
-            "type": "number",
-            "format": "double"
-          },
-          "timeStamp": {
-            "type": "string",
-            "format": "date-time",
-            "example": "2019-12-10T11:06:50.466318+01:00"
-          }
-        },
-        "additionalProperties": false
-      },
-      "AddUserDto": {
-        "required": [
-          "userId"
-        ],
-        "type": "object",
-        "properties": {
-          "userId": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "AlertDto": {
-        "required": [
-          "currency",
-          "originAssetName",
-          "value"
-        ],
+      "AddAlertDto": {
+        "required": ["currency", "originAssetName", "value"],
         "type": "object",
         "properties": {
           "value": {
@@ -744,13 +717,60 @@
         },
         "additionalProperties": false
       },
+      "AddAssetValueDto": {
+        "required": ["timeStamp", "value"],
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number",
+            "format": "double"
+          },
+          "timeStamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2019-12-10T11:06:50.466318+01:00"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AddUserDto": {
+        "required": ["userId"],
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AlertDto": {
+        "type": "object",
+        "properties": {
+          "alertId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "value": {
+            "type": "number",
+            "format": "double"
+          },
+          "originAssetName": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "originAssetType": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "AssetDto": {
-        "required": [
-          "category",
-          "friendlyName",
-          "name",
-          "symbol"
-        ],
+        "required": ["category", "friendlyName", "name", "symbol"],
         "type": "object",
         "properties": {
           "name": {
@@ -770,11 +790,7 @@
         "additionalProperties": false
       },
       "AssetValueDto": {
-        "required": [
-          "assetIdentifier",
-          "timeStamp",
-          "value"
-        ],
+        "required": ["assetIdentifier", "timeStamp", "value"],
         "type": "object",
         "properties": {
           "assetIdentifier": {
@@ -821,10 +837,7 @@
         "additionalProperties": false
       },
       "OperationType": {
-        "enum": [
-          "Update",
-          "Set"
-        ],
+        "enum": ["Update", "Set"],
         "type": "string"
       },
       "PatchUser": {
@@ -842,12 +855,7 @@
         "additionalProperties": false
       },
       "PatchUserAssetsDto": {
-        "required": [
-          "assetName",
-          "description",
-          "type",
-          "value"
-        ],
+        "required": ["assetName", "description", "type", "value"],
         "type": "object",
         "properties": {
           "value": {
@@ -891,15 +899,10 @@
             "nullable": true
           }
         },
-        "additionalProperties": { }
+        "additionalProperties": {}
       },
       "TransactionDto": {
-        "required": [
-          "assetIdentifier",
-          "description",
-          "timeStamp",
-          "value"
-        ],
+        "required": ["assetIdentifier", "description", "timeStamp", "value"],
         "type": "object",
         "properties": {
           "assetIdentifier": {
@@ -921,11 +924,7 @@
         "additionalProperties": false
       },
       "UpdateUserPreferencesDto": {
-        "required": [
-          "alertsOnEmail",
-          "preferenceCurrency",
-          "weeklyReports"
-        ],
+        "required": ["alertsOnEmail", "preferenceCurrency", "weeklyReports"],
         "type": "object",
         "properties": {
           "preferenceCurrency": {
@@ -991,10 +990,7 @@
         "additionalProperties": false
       },
       "WalletDto": {
-        "required": [
-          "dateStamp",
-          "value"
-        ],
+        "required": ["dateStamp", "value"],
         "type": "object",
         "properties": {
           "value": {
@@ -1020,7 +1016,7 @@
   },
   "security": [
     {
-      "BearerJWT": [ ]
+      "BearerJWT": []
     }
   ]
 }

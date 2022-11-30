@@ -2,7 +2,6 @@
 apis/AlertApi.ts
 apis/AssetValuesApi.ts
 apis/AssetsApi.ts
-apis/GetAssetValuesApi.ts
 apis/TransactionApi.ts
 apis/UserAssetsApi.ts
 apis/UserPreferencesApi.ts
@@ -10,6 +9,7 @@ apis/UsersApi.ts
 apis/WalletApi.ts
 apis/index.ts
 index.ts
+models/AddAlertDto.ts
 models/AddAssetValueDto.ts
 models/AddUserDto.ts
 models/AlertDto.ts
