@@ -12,6 +12,8 @@ namespace ZPI.API.Endpoints.AssetValues.Add;
 [AllowAnonymous]
 public sealed class AssetValuesController : UseCaseController<AddAssetValueUseCase, AddAssetValuePresenter>
 {
+    private static readonly HttpClient client = new();
+    private const string apiUrl = "http://127.0.0.1:8000/api/check_alert/";
     public AssetValuesController(ILogger logger, AddAssetValueUseCase useCase, AddAssetValuePresenter presenter)
         : base(logger, useCase, presenter)
     { }
@@ -24,6 +26,7 @@ public sealed class AssetValuesController : UseCaseController<AddAssetValueUseCa
     public async ValueTask<IActionResult> PatchAssetValue(string assetIdentifier, AddAssetValueDto dto)
     {
         await useCase.Execute(new AddAssetValueUseCase.Input(assetIdentifier, dto.Value, dto.TimeStamp), presenter);
+        await client.GetStringAsync(apiUrl + "?asset=" + assetIdentifier);
         return await presenter.GetResultAsync();
     }
 }
