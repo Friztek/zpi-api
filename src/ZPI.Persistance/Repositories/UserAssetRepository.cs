@@ -83,8 +83,7 @@ public class UserAssetsRepository : IUserAssetsRepository
             throw new UserNotFoundException(UserNotFoundException.GenerateBaseMessage(searchModel.UserId));
         }
 
-        var preferenceCurrencyAsset = await this.context.AssetValues
-            .OrderBy(a => a.TimeStamp)
+        var preferenceCurrencyAsset = await this.context.AssetValuesAtm
             .FirstOrDefaultAsync(a => a.AssetIdentifier == user.PreferenceCurrency.ToLower());
 
         if (preferenceCurrencyAsset is null)
@@ -129,6 +128,15 @@ public class UserAssetsRepository : IUserAssetsRepository
 
             if (userAssetToUpdate is UserAssetEntity userAsset)
             {
+
+                transactions.Add(new TransactionEntity()
+                {
+                    AssetIdentifier = userAssetPatch.AssetName,
+                    UserIdentifier = updateModel.UserId,
+                    Value = userAssetPatch.Type == OperationType.Update ? userAssetPatch.Value : userAssetPatch.Value - userAssetToUpdate.Value,
+                    Description = userAssetPatch.Description
+                });
+
                 switch (userAssetPatch.Type)
                 {
                     case OperationType.Update:
@@ -138,14 +146,6 @@ public class UserAssetsRepository : IUserAssetsRepository
                         userAsset.Value = userAssetPatch.Value;
                         break;
                 }
-
-                transactions.Add(new TransactionEntity()
-                {
-                    AssetIdentifier = userAssetPatch.AssetName,
-                    UserIdentifier = updateModel.UserId,
-                    Value = userAssetPatch.Type == OperationType.Update ? userAssetPatch.Value : userAssetPatch.Value - userAssetToUpdate.Value,
-                    Description = userAssetPatch.Description
-                });
 
                 upsertedUserAssets.Add(userAsset);
 
