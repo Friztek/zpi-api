@@ -26,7 +26,7 @@ public sealed class UsersController : UseCaseController<ResetUserPasswordUseCase
     [Produces(MediaTypeNames.Application.Json)]
     [Consumes(MediaTypeNames.Application.Json)]
     [ProducesDefaultResponseType]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     public async ValueTask<IActionResult> ResetUserPassword()
     {

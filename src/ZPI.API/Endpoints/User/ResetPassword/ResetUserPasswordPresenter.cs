@@ -15,7 +15,7 @@ public sealed class ResetUserPasswordPresenter : ActionResultPresenterBase, Rese
         this.mapper = mapper;
     }
 
-    public void Success() => SetResult(ActionResultFactory.Ok200());
+    public void Success() => SetResult(ActionResultFactory.NoContent());
 
     public void UnknownError(Exception exception) => SetException(exception);
 
