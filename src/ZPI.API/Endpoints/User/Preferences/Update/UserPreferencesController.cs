@@ -15,6 +15,8 @@ public sealed class UserPreferencesController : UseCaseController<UpdateUserPref
 {
     private readonly IAPIMapper mapper;
     private readonly IUserInfoService service;
+    private static readonly HttpClient client = new();
+    private const string apiUrl = "http://host.docker.internal:8000/api/update-on-email/";
     public UserPreferencesController(ILogger logger, UpdateUserPreferencesUseCase useCase, UpdateUserPreferencesPresenter presenter, IAPIMapper mapper, IUserInfoService service)
         : base(logger, useCase, presenter)
     {
@@ -30,6 +32,9 @@ public sealed class UserPreferencesController : UseCaseController<UpdateUserPref
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     public async ValueTask<IActionResult> UpdateUserPreferences(UpdateUserPreferencesDto dto)
     {
+        var email = service.GetCurrentUserEmail();
+        var a = apiUrl + "?email=" + email + "&onEmail=" + dto.AlertsOnEmail.ToString();
+        await client.GetStringAsync(a);
         var userId = service.GetCurrentUserId();
         await useCase.Execute(new UpdateUserPreferencesUseCase.Input(userId, mapper.Map<UserPreferencesModel>(dto)), presenter);
         return await presenter.GetResultAsync();
