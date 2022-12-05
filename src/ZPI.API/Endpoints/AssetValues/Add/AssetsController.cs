@@ -13,7 +13,7 @@ namespace ZPI.API.Endpoints.AssetValues.Add;
 public sealed class AssetValuesController : UseCaseController<AddAssetValueUseCase, AddAssetValuePresenter>
 {
     private static readonly HttpClient client = new();
-    private const string apiUrl = "http://127.0.0.1:8000/api/check_alert/";
+    private const string apiUrl = "http://host.docker.internal:8000/api/check_alert/";
     public AssetValuesController(ILogger logger, AddAssetValueUseCase useCase, AddAssetValuePresenter presenter)
         : base(logger, useCase, presenter)
     { }
