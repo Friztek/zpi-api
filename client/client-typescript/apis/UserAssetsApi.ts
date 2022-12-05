@@ -44,7 +44,7 @@ export class UserAssetsApi extends runtime.BaseAPI {
 
     /**
      */
-    async deleteUserAssetRaw(requestParameters: DeleteUserAssetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<UserAssetDto>>> {
+    async deleteUserAssetRaw(requestParameters: DeleteUserAssetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters.assetName === null || requestParameters.assetName === undefined) {
             throw new runtime.RequiredError('assetName','Required parameter requestParameters.assetName was null or undefined when calling deleteUserAsset.');
         }
@@ -72,14 +72,13 @@ export class UserAssetsApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(UserAssetDtoFromJSON));
+        return new runtime.VoidApiResponse(response);
     }
 
     /**
      */
-    async deleteUserAsset(requestParameters: DeleteUserAssetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<UserAssetDto>> {
-        const response = await this.deleteUserAssetRaw(requestParameters, initOverrides);
-        return await response.value();
+    async deleteUserAsset(requestParameters: DeleteUserAssetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.deleteUserAssetRaw(requestParameters, initOverrides);
     }
 
     /**
