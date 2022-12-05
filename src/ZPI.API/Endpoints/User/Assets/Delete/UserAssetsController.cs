@@ -22,7 +22,7 @@ public sealed class UserAssetsController : UseCaseController<DeleteUserAssetUseC
     [Produces(MediaTypeNames.Application.Json)]
     [Consumes(MediaTypeNames.Application.Json)]
     [ProducesDefaultResponseType]
-    [ProducesResponseType(typeof(IEnumerable<UserAssetDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     public async ValueTask<IActionResult> DeleteUserAsset(string assetName, string? description)
     {
