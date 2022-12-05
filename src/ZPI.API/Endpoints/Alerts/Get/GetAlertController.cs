@@ -20,7 +20,7 @@ namespace ZPI.API.Endpoints.Alerts.Get
     public class AlertController : ControllerBase
     {
         private static readonly HttpClient client = new();
-        private const string apiUrl = "http://127.0.0.1:8000/api/alert/";
+        private const string apiUrl = "http://host.docker.internal:8000/api/alert/";
         private readonly IAssetValuesRepository repository;
 
         private readonly IUserInfoService service;
