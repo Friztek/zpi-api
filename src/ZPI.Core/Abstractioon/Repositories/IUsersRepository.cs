@@ -6,8 +6,9 @@ namespace ZPI.Core.Abstraction.Repositories;
 
 public interface IUsersRepository
 {
-    
+
     public record PatchUser(string UserId, string? NewEmail, string? NewName);
     public Task<UserModel> UpdateEmail(string UserId, string Email);
     public Task<UserModel> UpdateFullName(string UserId, string Email);
+    public Task ResetPassword(string Email);
 }

@@ -545,6 +545,37 @@
         }
       }
     },
+    "/api/users/me/password": {
+      "post": {
+        "tags": ["Users"],
+        "operationId": "ResetUserPassword",
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/users/me": {
       "patch": {
         "tags": ["Users"],
