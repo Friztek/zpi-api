@@ -11,4 +11,5 @@ public class TransactionEntity
     public double Value { get; set; }
     public OffsetDateTime TimeStamp { get; set; }
     public virtual AssetEntity Asset { get; set; }
+    public virtual UserPreferencesEntity User { get; set; }
 }

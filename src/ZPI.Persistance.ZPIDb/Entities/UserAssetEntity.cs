@@ -8,4 +8,5 @@ public class UserAssetEntity
     public string Description {get; set;}
 
     public virtual AssetEntity Asset { get; set; }
+    public virtual UserPreferencesEntity User { get; set; }
 }
