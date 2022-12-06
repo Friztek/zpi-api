@@ -21,7 +21,6 @@ public sealed class ZPIDbContext : DbContext
     }
 
     public DbSet<AssetEntity> Assets { get; init; }
-    public DbSet<AlertEntity> Alerts { get; init; }
     public DbSet<AssetValueEntity> AssetValues { get; init; }
     public DbSet<TransactionEntity> Transactions { get; init; }
     public DbSet<WalletEntity> Wallets { get; init; }
@@ -73,7 +72,6 @@ public sealed class ZPIDbContext : DbContext
         modelBuilder.Entity<AssetEntity>(entity =>
         {
             entity.HasKey(e => e.Identifier);
-            entity.HasMany(a => a.Alerts).WithOne(a => a.Asset).HasForeignKey(e => e.OriginAssetId);
             entity.HasMany(a => a.Transactions).WithOne(a => a.Asset).HasForeignKey(e => e.AssetIdentifier);
             entity.HasMany(a => a.UserAssets).WithOne(a => a.Asset).HasForeignKey(e => e.AssetIdentifier);
             entity.HasMany(a => a.Values).WithOne(a => a.Asset).HasForeignKey(e => e.AssetIdentifier);
@@ -82,6 +80,7 @@ public sealed class ZPIDbContext : DbContext
         modelBuilder.Entity<UserAssetEntity>(entity =>
         {
             entity.HasKey(e => new { e.AssetIdentifier, e.UserId, e.Description });
+            entity.HasOne(e => e.User).WithMany(e => e.Assets).HasForeignKey(e => e.UserId);
         });
 
         modelBuilder.Entity<AssetValueAtDay>(entity =>
@@ -94,11 +93,6 @@ public sealed class ZPIDbContext : DbContext
         {
             entity.ToView("AssetValueAtm");
             entity.HasNoKey();
-        });
-
-        modelBuilder.Entity<AlertEntity>(entity =>
-        {
-            entity.HasKey(e => new { e.Identifier, e.UserId });
         });
 
         modelBuilder.Entity<AssetValueEntity>(entity =>
@@ -114,12 +108,14 @@ public sealed class ZPIDbContext : DbContext
         modelBuilder.Entity<WalletEntity>(entity =>
         {
             entity.HasKey(e => e.Identifier);
+            entity.HasOne(e => e.User).WithMany(e => e.Wallets).HasForeignKey(e => e.UserIdentifier);
         });
 
         modelBuilder.Entity<TransactionEntity>(entity =>
         {
             entity.HasKey(e => e.Identifier);
             entity.Property(e => e.Identifier).ValueGeneratedOnAdd();
+            entity.HasOne(e => e.User).WithMany(e => e.Transactions).HasForeignKey(e => e.UserIdentifier);
         });
     }
 }

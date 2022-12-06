@@ -73,6 +73,9 @@ public sealed class PersistanceMappingRegister : IRegister
             .Map(d => d.PreferenceCurrency, s => s.UpdateModel.PreferenceCurrency)
             .Map(d => d.WeeklyReports, s => s.UpdateModel.WeeklyReports)
             .Ignore(d => d.IsDefault)
+            .Ignore(d => d.Assets)
+            .Ignore(d => d.Transactions)
+            .Ignore(d => d.Wallets)
             .ShallowCopyForSameType(false);
 
         config.NewConfig<IAssetValuesRepository.AddAssetValue, AssetValueEntity>()

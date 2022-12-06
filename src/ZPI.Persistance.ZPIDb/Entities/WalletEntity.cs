@@ -8,4 +8,6 @@ public class WalletEntity
     public string UserIdentifier { get; set; }
     public double Value { get; set; }
     public LocalDate DateStamp { get; set; }
+
+    public virtual UserPreferencesEntity User { get; set; }
 }   
