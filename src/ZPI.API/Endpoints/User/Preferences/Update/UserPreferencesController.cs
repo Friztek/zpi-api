@@ -16,7 +16,7 @@ public sealed class UserPreferencesController : UseCaseController<UpdateUserPref
     private readonly IAPIMapper mapper;
     private readonly IUserInfoService service;
     private static readonly HttpClient client = new();
-    private const string apiUrl = "http://host.docker.internal:8000/api/update-on-email/";
+    private const string apiUrl = "http://104.45.159.232:8000/api/update-on-email/";
     public UserPreferencesController(ILogger logger, UpdateUserPreferencesUseCase useCase, UpdateUserPreferencesPresenter presenter, IAPIMapper mapper, IUserInfoService service)
         : base(logger, useCase, presenter)
     {
