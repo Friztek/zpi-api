@@ -64,13 +64,14 @@ namespace ZPI.API.Endpoints.Alerts.Get
             var userPreference = await this.userRepository.GetAsync(new IUserPreferencesRepository.GetUserPreferences(userId));
             var asset_name = alert.OriginAssetName;
             var asset = await this.repository.GetAsync(new IAssetValuesRepository.GetAssetValue(asset_name));
+            var asset_currency = await this.repository.GetAsync(new IAssetValuesRepository.GetAssetValue(alert.Currency));
             AlertWithEmailDto alertWithEmail = new AlertWithEmailDto
             {
                 TargetValue = alert.Value,
                 Email = email,
                 OriginAssetName = alert.OriginAssetName,
                 TargetCurrency = alert.Currency,
-                CurrentValue = asset.Value,
+                CurrentValue = asset.Value/asset_currency.Value,
                 OnEmail = userPreference.AlertsOnEmail
             };
             var json = JsonConvert.SerializeObject(alertWithEmail);
