@@ -88,6 +88,7 @@ public static class ApiModule
         services.AddScoped<AddUserPresenter>();
         services.AddScoped<PatchUserPresenter>();
         services.AddScoped<ResetUserPasswordPresenter>();
+        services.AddScoped<SendRaportPresenter>();
     }
 
 

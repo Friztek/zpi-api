@@ -30,6 +30,16 @@ public class UsersRepository : IUsersRepository
         this.managementApiClient = new ManagementApiClient(token, new Uri(config.BasePath), managementConnection);
     }
 
+    public async Task<IEnumerable<UserModel>> GetAll()
+    {
+        GetUsersRequest updateRequest = new() { };
+
+        PaginationInfo paginationInfo = new() { };
+
+        var res = await this.managementApiClient.Users.GetAllAsync(updateRequest);
+        return res.Select(user => new UserModel(user.UserId, user.FullName, user.Email));
+    }
+
     public async Task ResetPassword(string Email)
     {
         var client = new RestClient("https://how-money.eu.auth0.com/");
@@ -49,7 +59,7 @@ public class UsersRepository : IUsersRepository
         };
 
         var res = await this.managementApiClient.Users.UpdateAsync(UserId, updateRequest);
-        return new UserModel(res.FullName, res.Email);
+        return new UserModel(res.UserId, res.FullName, res.Email);
     }
 
     public async Task<UserModel> UpdateFullName(string UserId, string FullName)
@@ -61,6 +71,6 @@ public class UsersRepository : IUsersRepository
 
         var res = await this.managementApiClient.Users.UpdateAsync(UserId, updateRequest);
 
-        return new UserModel(res.FullName, res.Email);
+        return new UserModel(res.UserId, res.FullName, res.Email);
     }
 }

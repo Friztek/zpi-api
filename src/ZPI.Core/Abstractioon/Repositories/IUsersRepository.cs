@@ -11,4 +11,5 @@ public interface IUsersRepository
     public Task<UserModel> UpdateEmail(string UserId, string Email);
     public Task<UserModel> UpdateFullName(string UserId, string Email);
     public Task ResetPassword(string Email);
+    public Task<IEnumerable<UserModel>> GetAll();
 }

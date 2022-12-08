@@ -30,5 +30,6 @@ public static class IntegrationsModule
     private static void RegisterWorkers(this IServiceCollection services)
     {
         services.AddHostedService<WorkerService>();
+        services.AddHostedService<ReportsWorker>();
     }
 }

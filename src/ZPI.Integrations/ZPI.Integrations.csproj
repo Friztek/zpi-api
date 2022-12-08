@@ -17,6 +17,7 @@
 
   <ItemGroup>    <!-- Projects references -->
     <ProjectReference Include="../ZPI.Core/ZPI.Core.csproj" />
+    <ProjectReference Include="../ZPI.Persistance.ZPIDb/ZPI.Persistance.ZPIDb.csproj" />
   </ItemGroup>
 
 

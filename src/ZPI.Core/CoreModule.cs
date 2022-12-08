@@ -26,5 +26,6 @@ public static class CoreModule
         services.AddScoped<PatchUserUseCase>();
         services.AddScoped<SyncWalletValuesUseCase>();
         services.AddScoped<ResetUserPasswordUseCase>();
+        services.AddScoped<SendRaportsDataUseCase>();
     }
 }
