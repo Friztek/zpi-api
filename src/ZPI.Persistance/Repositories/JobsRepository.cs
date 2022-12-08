@@ -46,7 +46,7 @@ public class JobsRepository : IJobsRepository
             var userAssets = await userAssetsRepository.SearchAsync(new IUserAssetsRepository.GetUserAssets(userPreference.UserId));
 
             // nie wysylamy raportyu jak pajac nie ma assetow xd i elo
-            var biggestUserAsset = userAssets.MaxBy(a => a.OriginValue);
+            var biggestUserAsset = userAssets.MaxBy(a => a.UserCurrencyValue);
             var email = users.First(u => u.UserId == userPreference.UserId).Email;
 
             if (biggestUserAsset is not null)
