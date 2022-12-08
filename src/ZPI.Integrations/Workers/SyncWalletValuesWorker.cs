@@ -9,7 +9,7 @@ using ZPI.Core.UseCases;
 
 public class WorkerService : BackgroundService
 {
-    private readonly PeriodicTimer timer = new(TimeSpan.FromSeconds(10));
+    private readonly PeriodicTimer timer = new(TimeSpan.FromHours(1));
     private readonly IServiceProvider services;
 
     public WorkerService(IServiceProvider services)
