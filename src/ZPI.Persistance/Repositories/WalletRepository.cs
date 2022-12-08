@@ -49,9 +49,9 @@ public class WalletRepository : IWalletRepository
             throw new UserNotFoundException(UserNotFoundException.GenerateBaseMessage(searchModel.UserId));
         }
 
-        var preferenceCurrencyAsset = await this.context.AssetValues
-            .OrderBy(a => a.TimeStamp)
-            .FirstOrDefaultAsync(a => a.AssetIdentifier == user.PreferenceCurrency.ToLower());
+
+        var assetValues = await context.AssetValuesAtm.ToListAsync();
+        var preferenceCurrencyAsset = assetValues.FirstOrDefault(a => a.AssetIdentifier == user.PreferenceCurrency);
 
         if (preferenceCurrencyAsset is null)
         {
@@ -59,7 +59,6 @@ public class WalletRepository : IWalletRepository
             throw new Exception();
         }
 
-        var assetValues = await this.context.AssetValuesAtm.ToListAsync();
 
         var userAssets = await this.context.UserAssets
                     .Include(ua => ua.Asset)
