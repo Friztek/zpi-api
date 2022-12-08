@@ -14,6 +14,7 @@ namespace ZPI.Persistance.Repositories;
 
 public class JobsRepository : IJobsRepository
 {
+    private const string apiUrl = "http://104.45.159.232:8000";
     private readonly ZPIDbContext context;
     private readonly IUsersRepository usersRepository;
     private readonly IUserPreferencesRepository userPreferencesRepository;
@@ -54,7 +55,7 @@ public class JobsRepository : IJobsRepository
             }
         }
         var json = JsonConvert.SerializeObject(reqBody);
-        var client = new RestClient("http://127.0.0.1:8000");
+        var client = new RestClient(apiUrl);
         var request = new RestRequest("api/report/");
         request.AddBody(json);
         var a = await client.PostAsync(request);
