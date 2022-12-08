@@ -23,8 +23,10 @@ public class WalletRepository : IWalletRepository
     public async Task<IEnumerable<WalletModel>> SearchAsync(IWalletRepository.GetWallets searchModel)
     {
         var query = context.Wallets
-        .Where(e => e.UserIdentifier == searchModel.UserId)
-        .AsQueryable();
+            .Where(e => e.UserIdentifier == searchModel.UserId)
+            .AsQueryable();
+
+        var userPreference = await this.context.UserPreferences.FirstOrDefaultAsync(pref => pref.UserId == searchModel.UserId);
 
         if (searchModel.From.HasValue)
         {
@@ -37,7 +39,20 @@ public class WalletRepository : IWalletRepository
         }
 
         var values = await query.ToListAsync();
-        return mapper.Map<IEnumerable<WalletModel>>(values);
+        if (userPreference?.PreferenceCurrency == "usd")
+        {
+            return mapper.Map<IEnumerable<WalletModel>>(values);
+        }
+
+        var assetValues = await this.context.AssetValuesAtDay
+            .Where(asset => asset.AssetIdentifier == userPreference.PreferenceCurrency)
+            .ToListAsync();
+
+        return values.Select((val) => new WalletModel(
+                    searchModel.UserId,
+                    val.Value / assetValues.First(ass => ass.TimeStamp.Date == val.DateStamp).Value,
+                    val.DateStamp
+                ));
     }
 
     public async Task<(double total, double currency, double crypt, double metal)> GetAsync(IWalletRepository.GetWallet searchModel)
@@ -59,14 +74,15 @@ public class WalletRepository : IWalletRepository
             throw new Exception();
         }
 
-
         var userAssets = await this.context.UserAssets
                     .Include(ua => ua.Asset)
                     .Where(ua => ua.UserId == searchModel.UserId)
                     .ToListAsync();
 
         var assets = userAssets.Select(userAsset => this.mapper.Map<UserAssetModel>((userAsset,
-            assetValues.FirstOrDefault(val => val.AssetIdentifier == userAsset.AssetIdentifier).Value * userAsset.Value / preferenceCurrencyAsset.Value
+            userAsset.Value
+            * assetValues.FirstOrDefault(val => val.AssetIdentifier == userAsset.AssetIdentifier).Value
+            / (searchModel.InUsd ? 1 : preferenceCurrencyAsset.Value)
         )));
         var all_assets = 0d;
         var currency_assets = 0d;
@@ -97,7 +113,7 @@ public class WalletRepository : IWalletRepository
 
         foreach (var userId in userIds)
         {
-            var (total, _, _, _) = await this.GetAsync(new IWalletRepository.GetWallet(userId));
+            var (total, _, _, _) = await this.GetAsync(new IWalletRepository.GetWallet(userId, true));
             var lastWallet = await this.context.Wallets.Where(wallet => wallet.UserIdentifier == userId).OrderBy(a => a.DateStamp).LastOrDefaultAsync();
             if (lastWallet is not null && now == lastWallet.DateStamp)
             {

@@ -11,6 +11,6 @@ public interface IWalletRepository :
 {
     public Task SyncUserWallets();
     public record GetWallets(LocalDate? From, LocalDate? To, string UserId);
-    public record GetWallet(string UserId);
+    public record GetWallet(string UserId, bool InUsd = false);
 
 }

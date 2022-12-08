@@ -45,13 +45,14 @@ public class JobsRepository : IJobsRepository
             var walletValueWeekAgo = (await walletRepository.SearchAsync(new IWalletRepository.GetWallets(weekAgoDate, weekAgoDate, userPreference.UserId))).FirstOrDefault();
             var userAssets = await userAssetsRepository.SearchAsync(new IUserAssetsRepository.GetUserAssets(userPreference.UserId));
 
+            var grouped = userAssets.GroupBy(ass => ass.Asset.Name);
             // nie wysylamy raportyu jak pajac nie ma assetow xd i elo
-            var biggestUserAsset = userAssets.MaxBy(a => a.UserCurrencyValue);
+            var biggestUserAsset = grouped.MaxBy(a => a.Sum(b => b.UserCurrencyValue));
             var email = users.First(u => u.UserId == userPreference.UserId).Email;
 
             if (biggestUserAsset is not null)
             {
-                reqBody.Add(new(email, walletValue.total, walletValueWeekAgo?.Value, biggestUserAsset.Asset.FriendlyName, biggestUserAsset.UserCurrencyValue, userPreference.PreferenceCurrency));
+                reqBody.Add(new(email, walletValue.total, walletValueWeekAgo?.Value, biggestUserAsset.First().Asset.FriendlyName, biggestUserAsset.Sum(a => a.UserCurrencyValue), userPreference.PreferenceCurrency));
             }
         }
         var json = JsonConvert.SerializeObject(reqBody);
