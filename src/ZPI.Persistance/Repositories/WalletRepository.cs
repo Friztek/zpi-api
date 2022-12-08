@@ -40,6 +40,14 @@ public class WalletRepository : IWalletRepository
         }
 
         var values = await query.ToListAsync();
+
+        if (values.Find(wallet => wallet.DateStamp == now) is not null)
+        {
+            values = values.Where(wallet => wallet.DateStamp != now).ToList();
+            var curr = (await GetAsync(new IWalletRepository.GetWallet(searchModel.UserId, true))).total;
+            values.Add(new WalletEntity() { UserIdentifier = searchModel.UserId, DateStamp = now, Value = curr });
+        }
+
         if (userPreference?.PreferenceCurrency == "usd")
         {
             return mapper.Map<IEnumerable<WalletModel>>(values);
@@ -50,12 +58,6 @@ public class WalletRepository : IWalletRepository
             .ToListAsync();
 
 
-        if (values.Find(wallet => wallet.DateStamp == now) is not null)
-        {
-            values = values.Where(wallet => wallet.DateStamp != now).ToList();
-            var curr = (await GetAsync(new IWalletRepository.GetWallet(searchModel.UserId, true))).total;
-            values.Add(new WalletEntity() { UserIdentifier = searchModel.UserId, DateStamp = now, Value = curr });
-        }
         return values.Select((val) => new WalletModel(
                     searchModel.UserId,
                     val.Value / assetValues.First(ass => ass.TimeStamp.Date == val.DateStamp).Value,
