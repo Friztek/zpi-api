@@ -26,6 +26,7 @@ public class WalletRepository : IWalletRepository
             .Where(e => e.UserIdentifier == searchModel.UserId)
             .AsQueryable();
 
+        var now = SystemClock.Instance.InUtc().GetCurrentDate();
         var userPreference = await this.context.UserPreferences.FirstOrDefaultAsync(pref => pref.UserId == searchModel.UserId);
 
         if (searchModel.From.HasValue)
@@ -48,6 +49,13 @@ public class WalletRepository : IWalletRepository
             .Where(asset => asset.AssetIdentifier == userPreference.PreferenceCurrency)
             .ToListAsync();
 
+
+        if (values.Find(wallet => wallet.DateStamp == now) is not null)
+        {
+            values = values.Where(wallet => wallet.DateStamp != now).ToList();
+            var curr = (await GetAsync(new IWalletRepository.GetWallet(searchModel.UserId, true))).total;
+            values.Add(new WalletEntity() { UserIdentifier = searchModel.UserId, DateStamp = now, Value = curr });
+        }
         return values.Select((val) => new WalletModel(
                     searchModel.UserId,
                     val.Value / assetValues.First(ass => ass.TimeStamp.Date == val.DateStamp).Value,
